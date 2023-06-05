@@ -16,7 +16,8 @@ func SetConnect(uri string) (*mongo.Client, error) {
 	defer dbCancelCtx()
 
 	// connecting to the database using the URI string
-	client, err := mongo.Connect(dbCtx, options.Client().ApplyURI(uri).SetServerAPIOptions(options.ServerAPI(options.ServerAPIVersion1)))
+	client, err := mongo.Connect(dbCtx, options.Client().ApplyURI(uri))
+	//.SetServerAPIOptions(options.ServerAPI(options.ServerAPIVersion1)))
 	if err != nil {
 		log.Panicln("Error while connecting to database: ", err)
 	}
@@ -34,19 +35,23 @@ func SetConnect(uri string) (*mongo.Client, error) {
 func OpenConnect() *mongo.Client {
 	count := 0
 	for {
-		
+
 		client, err := SetConnect(os.Getenv("URI"))
-		if err == nil {
+		if err != nil {
+			log.Println("Mail App Database not Connected")
+			count++
+		} else {
 			log.Println("Mail App Database is Connected")
 			return client
 		}
-		if count >= 10 {
-			log.Println("Mail App Database not Connected")
+
+		if count >= 5 {
+			log.Println(err)
 			return nil
 		}
 
-		log.Println("Mail App Database Trying to Connect")
-		count += 1
+		log.Println("Wait:.... Mail App Database Retrying to Connect")
+		time.Sleep(3 * time.Second)
 		continue
 	}
 }

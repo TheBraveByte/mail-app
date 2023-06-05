@@ -6,7 +6,7 @@ import (
 )
 
 type DataStore interface {
-	AddSubscriber(subs *model.Subscriber) (bool, string, error)
+	AddSubscriber(subs model.Subscriber) (bool, string, error)
 	AddMail(mu model.MailUpload) (string, error)
 	FindSubscribers() ([]primitive.M, error)
 }

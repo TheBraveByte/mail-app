@@ -21,7 +21,7 @@ func NewMongo(client *mongo.Client) DataStore {
 }
 
 // AddSubscriber - this will process the subscriber details and have that added in the dataase
-func (mg *Mongo) AddSubscriber(subs *model.Subscriber) (bool, string, error) {
+func (mg *Mongo) AddSubscriber(subs model.Subscriber) (bool, string, error) {
 	ctx, cancelCtx := context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancelCtx()
 	var res bson.M
