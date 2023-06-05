@@ -2,7 +2,7 @@ package model
 
 import "time"
 
-// Subscriber : information or details from users
+// Subscriber : information or details from subscribers
 type Subscriber struct {
 	FirstName string `bson:"first_name" json:"first_name"`
 	LastName  string `bson:"last_name" json:"last_name"`
@@ -19,7 +19,7 @@ type Mail struct {
 	Name        string
 }
 
-// MailUpload - holds the upload contect be the admin
+// MailUpload - holds the upload contect be the user
 type MailUpload struct {
 	DocxName    string    `bson:"docx_name" json:"docx_name"`
 	DocxContent string    `bson:"docx" json:"docx"`

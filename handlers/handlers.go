@@ -38,7 +38,7 @@ func (ma *MailApp) Home() http.HandlerFunc {
 // GetSubscriber: this will process the registration of the subscribers
 func (ma *MailApp) GetSubscriber() http.HandlerFunc {
 	return func(wr http.ResponseWriter, rq *http.Request) {
-		var subs *model.Subscriber
+		var subs model.Subscriber
 		subscriber, err := tools.JSONReader(wr, rq, subs)
 		if err != nil {
 			http.Error(wr, fmt.Sprintf("failed to read json, {{err}}"), http.StatusBadRequest)

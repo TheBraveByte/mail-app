@@ -16,7 +16,7 @@ import (
 )
 
 // JSONReader : is a resuable function to help read the information or details submitted and document upload.
-func JSONReader(wr http.ResponseWriter, rq *http.Request, subs *model.Subscriber) (*model.Subscriber, error) {
+func JSONReader(wr http.ResponseWriter, rq *http.Request, subs model.Subscriber) (model.Subscriber, error) {
 	read := http.MaxBytesReader(wr, rq.Body, int64(1024*1024)*10)
 	defer func(io.ReadCloser) {
 		err := read.Close()
@@ -27,7 +27,7 @@ func JSONReader(wr http.ResponseWriter, rq *http.Request, subs *model.Subscriber
 
 	err := json.NewDecoder(read).Decode(&subs)
 	if err != nil {
-		return nil, err
+		return model.Subscriber{}, err
 	}
 	return subs, nil
 }

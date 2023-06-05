@@ -2,8 +2,6 @@ package main
 
 import (
 	"context"
-	"fmt"
-	_ "fmt"
 	"log"
 	"net/http"
 	_ "time"
@@ -46,11 +44,9 @@ func main() {
 
 	// getting access to the handlers
 	app := handlers.NewMailApp(client, MailChan)
-	fmt.Println("hello, am the error 2")
 
 	handle := Routes(app)
 
-	fmt.Println("hello, am the error 3")
 
 	srv := http.Server{
 		Addr:    ":8080",
@@ -61,5 +57,4 @@ func main() {
 	if err := srv.ListenAndServe(); err != http.ErrServerClosed {
 		log.Fatalf("Shutting Down the Mail App Server ")
 	}
-
 }
