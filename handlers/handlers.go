@@ -5,7 +5,6 @@ import (
 	"log"
 	"net/http"
 	"time"
-	_ "time"
 
 	"github.com/yusuf/mailapp/db"
 	"github.com/yusuf/mailapp/model"
