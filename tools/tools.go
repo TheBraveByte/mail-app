@@ -1,11 +1,12 @@
 package tools
 
 import (
+	"bufio"
 	"encoding/json"
 	"fmt"
 	"html/template"
 	"io"
-	"io/ioutil"
+	_ "io/ioutil"
 	"log"
 	"net/http"
 	"path/filepath"
@@ -15,7 +16,7 @@ import (
 	"github.com/yusuf/mailapp/model"
 )
 
-// JSONReader : is a resuable function to help read the information or details submitted and document upload.
+// JSONReader : is a resuable function to help read the information or details submitted.
 func JSONReader(wr http.ResponseWriter, rq *http.Request, subs model.Subscriber) (model.Subscriber, error) {
 	read := http.MaxBytesReader(wr, rq.Body, int64(1024*1024)*10)
 	defer func(io.ReadCloser) {
@@ -48,12 +49,13 @@ func JSONWriter(wr http.ResponseWriter, msg string, statusCode int) error {
 	return nil
 }
 
+// ReadForm handles the processing of multipart form data, extracting relevant fields, and reading the content of an uploaded documen
 func ReadForm(wr http.ResponseWriter, rq *http.Request, mail model.MailUpload) (model.MailUpload, error) {
 	if err := rq.ParseMultipartForm(10 << 20); err != nil {
 		log.Fatal(err)
 	}
 	form := rq.MultipartForm
-	
+
 	mail.DocxName = form.Value["docx_name"][0]
 	mail.Date = time.Now()
 
@@ -72,12 +74,16 @@ func ReadForm(wr http.ResponseWriter, rq *http.Request, mail model.MailUpload) (
 			}
 			defer f.Close()
 
-			content, err := ioutil.ReadAll(f)
-			if err != nil {
-				return model.MailUpload{}, err
+
+			scanner := bufio.NewScanner(f)
+			for scanner.Scan() {
+				line := fmt.Sprintf("%s<br>", scanner.Text())
+				mail.DocxContent += line
 			}
 
-			mail.DocxContent = string(content)
+			if err := scanner.Err(); err != nil {
+				log.Fatal(err)
+			}
 		default:
 			return model.MailUpload{}, fmt.Errorf("upload document not allow; try .txt .docx or .doc")
 		}
@@ -85,6 +91,7 @@ func ReadForm(wr http.ResponseWriter, rq *http.Request, mail model.MailUpload) (
 	return mail, nil
 }
 
+// HTMLRender function reads and parses an HTML template file, executes the parsed template with provided data, and writes the resulting HTML to the http.ResponseWriter. 
 func HTMLRender(wr http.ResponseWriter, rq *http.Request, dt any) error {
 	filePath := "./index.html"
 
@@ -100,35 +107,3 @@ func HTMLRender(wr http.ResponseWriter, rq *http.Request, dt any) error {
 
 	return nil
 }
-
-// func HTMLRender(wr http.ResponseWriter, rq *http.Request, dt any) error {
-// 	matchFiles, err := filepath.Glob("./index.html")
-
-// 	if err != nil || err == filepath.ErrBadPattern {
-// 		return fmt.Errorf("HTMLRender Error: invalid pattern; cannot find expected file")
-// 	}
-// 	if len(matchFiles) == 0 {
-// 		return fmt.Errorf("HTMLRender Error: no matching file found")
-// 	}
-
-// 	if len(matchFiles) > 1 {
-// 		return fmt.Errorf("HTMLRender Error: match file is more than one")
-// 	}
-
-// 	tmp, err := template.ParseFiles(matchFiles[0])
-// 	if err != nil {
-// 		return fmt.Errorf("HTMLRender Error: cannot parse file, ${{err}}")
-// 	}
-
-// 	buf := new(bytes.Buffer)
-// 	err = tmp.Execute(buf, dt)
-// 	if err != nil {
-// 		return fmt.Errorf("HTMLRender failed to execute templates", err)
-// 	}
-// 	_, err = buf.WriteTo(buf)
-// 	if err != nil {
-// 		return fmt.Errorf("HTMLRender failed to Write response", err)
-// 	}
-
-// 	return nil
-// }
