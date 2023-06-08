@@ -7,8 +7,9 @@ require (
 	go.mongodb.org/mongo-driver v1.11.6
 )
 
+require github.com/go-chi/chi/v5 v5.0.8
+
 require (
-	github.com/go-chi/chi v1.5.4
 	github.com/golang/snappy v0.0.1 // indirect
 	github.com/joho/godotenv v1.5.1
 	github.com/klauspost/compress v1.13.6 // indirect
