@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"os"
 	"time"
 
 	"github.com/yusuf/mailapp/db"
@@ -78,8 +79,6 @@ func (ma *MailApp) SendMail() http.HandlerFunc {
 			http.Error(wr, fmt.Sprintf("failed query: %v", err), http.StatusInternalServerError)
 		}
 
-		fmt.Println(res)
-
 		for _, s := range res {
 			subEmail := s["email"].(string)
 			firstName := s["first_name"].(string)
@@ -87,7 +86,7 @@ func (ma *MailApp) SendMail() http.HandlerFunc {
 
 			subName := fmt.Sprintf("%s %s", firstName, lastName)
 			mail := model.Mail{
-				Source:      "yusufakinleye144@gmail.com",
+				Source:      os.Getenv("GMAIL_ACC"),
 				Destination: subEmail,
 				Name:        subName,
 				Message:     upload.DocxContent,
