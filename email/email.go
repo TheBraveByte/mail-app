@@ -11,12 +11,15 @@ import (
 )
 
 func MailServer(mailChan model.Mail) {
+
 	d := gomail.NewDialer("smtp.gmail.com", 465, os.Getenv("GMAIL_ACC"), os.Getenv("APP_PASSWORD"))
 	s, err := d.Dial()
 	if err != nil {
 		panic(err)
 	}
+	
 	msg := gomail.NewMessage()
+
 
 	msg.SetHeader("From", mailChan.Source)
 	msg.SetAddressHeader("To", mailChan.Destination, mailChan.Name)
@@ -29,16 +32,15 @@ func MailServer(mailChan model.Mail) {
 	msg.Reset()
 }
 
-func MailDelivery(mailChan chan model.Mail) {
-	worker := 5
-
+func MailDelivery(mailChan chan model.Mail, worker int) {
 	var wg sync.WaitGroup
 	for x := 0; x < worker; x += 1 {
 		wg.Add(1)
-		defer wg.Done()
-		for {
-			MailServer(<-mailChan)
-		}
+			for m := range mailChan {
+				MailServer(m)
+			}
+			defer wg.Done()
 	}
 	wg.Wait()
 }
+
