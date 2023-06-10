@@ -86,7 +86,7 @@ func (ma *MailApp) SendMail() http.HandlerFunc {
 
 			subName := fmt.Sprintf("%s %s", firstName, lastName)
 			mail := model.Mail{
-				Source:      os.Getenv("GMAIL_ACC"),
+				Source:      os.Getenv("USERNAME"),
 				Destination: subEmail,
 				Name:        subName,
 				Message:     upload.DocxContent,

@@ -4,7 +4,6 @@ import (
 	"context"
 	"log"
 	"net/http"
-	_ "time"
 
 	"github.com/joho/godotenv"
 	"github.com/yusuf/mailapp/db"
