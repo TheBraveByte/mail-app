@@ -13,7 +13,7 @@ import (
 	"time"
 	_ "time"
 
-	"github.com/yusuf/mailapp/model"
+	"github.com/akinbyte/mailapp/model"
 )
 
 // JSONReader : is a resuable function to help read the information or details submitted.

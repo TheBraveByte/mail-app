@@ -5,11 +5,11 @@ import (
 	"log"
 	"net/http"
 
+	"github.com/akinbyte/mailapp/db"
+	"github.com/akinbyte/mailapp/email"
+	"github.com/akinbyte/mailapp/handlers"
+	"github.com/akinbyte/mailapp/model"
 	"github.com/joho/godotenv"
-	"github.com/yusuf/mailapp/db"
-	"github.com/yusuf/mailapp/email"
-	"github.com/yusuf/mailapp/handlers"
-	"github.com/yusuf/mailapp/model"
 )
 
 var (
@@ -22,7 +22,6 @@ func main() {
 	MailChan = make(chan model.Mail, BufferSize)
 	Worker = 5
 
-	defer close(MailChan)
 
 	err := godotenv.Load()
 	if err != nil {
@@ -42,6 +41,9 @@ func main() {
 	}(context.TODO())
 
 	go email.MailDelivery(MailChan, Worker)
+	
+	defer close(MailChan)
+
 
 	// getting access to the handlers
 	app := handlers.NewMailApp(client, MailChan)

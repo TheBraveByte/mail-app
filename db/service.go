@@ -1,7 +1,7 @@
 package db
 
 import (
-	"github.com/yusuf/mailapp/model"
+	"github.com/akinbyte/mailapp/model"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 

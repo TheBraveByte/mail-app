@@ -7,9 +7,9 @@ import (
 	"os"
 	"time"
 
-	"github.com/yusuf/mailapp/db"
-	"github.com/yusuf/mailapp/model"
-	"github.com/yusuf/mailapp/tools"
+	"github.com/akinbyte/mailapp/db"
+	"github.com/akinbyte/mailapp/model"
+	"github.com/akinbyte/mailapp/tools"
 
 	"go.mongodb.org/mongo-driver/mongo"
 )
@@ -62,7 +62,7 @@ func (ma *MailApp) SendMail() http.HandlerFunc {
 		var mailUpload model.MailUpload
 		upload, err := tools.ReadForm(wr, rq, mailUpload)
 		if err != nil {
-			http.Error(wr, fmt.Sprintf("failed to read json, {{err}}"), http.StatusBadRequest)
+			http.Error(wr, err.Error(), http.StatusBadRequest)
 		}
 
 		msg, err := ma.MailDB.AddMail(upload)
@@ -76,7 +76,7 @@ func (ma *MailApp) SendMail() http.HandlerFunc {
 
 		res, err := ma.MailDB.FindSubscribers()
 		if err != nil {
-			http.Error(wr, fmt.Sprintf("failed query: %v", err), http.StatusInternalServerError)
+			http.Error(wr, fmt.Sprintf("SendMail: failed query: %v", err), http.StatusInternalServerError)
 		}
 
 		for _, s := range res {
@@ -86,7 +86,7 @@ func (ma *MailApp) SendMail() http.HandlerFunc {
 
 			subName := fmt.Sprintf("%s %s", firstName, lastName)
 			mail := model.Mail{
-				Source:      os.Getenv("USERNAME"),
+				Source:      os.Getenv("GMAIL_ACC"),
 				Destination: subEmail,
 				Name:        subName,
 				Message:     upload.DocxContent,
