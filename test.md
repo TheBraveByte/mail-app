@@ -35,7 +35,7 @@ To avoid confusion, I'll explain the differences and similarities between concur
 >
 > - _Rob Pike_
 
-![concurrent vs parallelism Image](https://imgur.com/a/pVArEHJ)
+![concurrent vs parallelism Image](https://i.imgur.com/pVArEHJ.jpg)
 
 Concurrency and parallelism often need clarification to be the same, even though they are not. However, they both involve the simultaneous execution of processes and are sometimes used interchangeably and based on similar principles.
 
