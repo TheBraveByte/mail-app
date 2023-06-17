@@ -10,7 +10,7 @@ type Subscriber struct {
 	Interest  string `bson:"interest" json:"interest"`
 }
 
-// Mail: contains field of what a email entails
+// Mail: contains field of what the mail entails
 type Mail struct {
 	Source      string
 	Destination string
@@ -19,7 +19,7 @@ type Mail struct {
 	Name        string
 }
 
-// MailUpload - holds the upload contect be the user
+// MailUpload - holds the upload content and details for the mail
 type MailUpload struct {
 	DocxName    string    `bson:"docx_name" json:"docx_name"`
 	DocxContent string    `bson:"docx" json:"docx"`

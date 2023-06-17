@@ -20,7 +20,7 @@ func NewMongo(client *mongo.Client) DataStore {
 	return &Mongo{MailDB: client}
 }
 
-// AddSubscriber - this will process the subscriber details and have that added in the dataase
+// AddSubscriber - this will process the subscriber details and have that added in the database
 func (mg *Mongo) AddSubscriber(subs model.Subscriber) (bool, string, error) {
 	ctx, cancelCtx := context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancelCtx()
@@ -40,7 +40,7 @@ func (mg *Mongo) AddSubscriber(subs model.Subscriber) (bool, string, error) {
 	return true, "", nil
 }
 
-// AddMail - this will allow the mai user/admin to upload new newletter mail to his/her subscriber
+// AddMail - this will allow the mai user/admin to upload new mail to his/her subscriber
 func (mg *Mongo) AddMail(mu model.MailUpload) (string, error) {
 	ctx, cancelCtx := context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancelCtx()
@@ -49,7 +49,7 @@ func (mg *Mongo) AddMail(mu model.MailUpload) (string, error) {
 	if err != nil {
 		return "", fmt.Errorf("AddMail: unable to add new mail, %v", err)
 	}
-	return fmt.Sprint("New mail successfully added"), nil
+	return "New mail successfully added", nil
 }
 
 // FindSubscribers - this query the database to get all the mail to sent to subscribers
@@ -58,7 +58,7 @@ func (mg *Mongo) FindSubscribers() ([]primitive.M, error) {
 	defer cancelCtx()
 
 	var res []bson.M
-	// get all suscribers data
+	// get all subscribers data
 	cursor, err := Default(mg.MailDB, "subscribers").Find(ctx, bson.D{{}})
 	if err != nil {
 		return []bson.M{}, err

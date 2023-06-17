@@ -1,11 +1,8 @@
 package email
 
 import (
-	_ "crypto/tls"
-	_ "fmt"
 	"log"
 	"os"
-	_ "sync"
 
 	"github.com/akinbyte/mailapp/model"
 	"gopkg.in/gomail.v2"
@@ -21,7 +18,7 @@ func MailServer(mailChan model.Mail) {
 
 	msg := gomail.NewMessage()
 
-	msg.SetAddressHeader("From", mailChan.Source, os.Getenv("USERNAME"))
+	msg.SetAddressHeader("From", mailChan.Source, os.Getenv("USER_NAME"))
 	msg.SetHeader("To", mailChan.Destination)
 	msg.SetHeader("Subject", mailChan.Subject)
 	msg.SetBody("text/html", mailChan.Message)
@@ -56,6 +53,7 @@ func MailDelivery(mailChan chan model.Mail, worker int) {
 }
 
 
+//low performance and not efficiency
 // func MailDelivery(mailChan chan model.Mail, worker int) {
 // 	var wg sync.WaitGroup
 // 	for x := 0; x < worker; x += 1 {

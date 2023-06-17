@@ -41,7 +41,7 @@ func (ma *MailApp) GetSubscriber() http.HandlerFunc {
 		var subs model.Subscriber
 		subscriber, err := tools.JSONReader(wr, rq, subs)
 		if err != nil {
-			http.Error(wr, fmt.Sprintf("failed to read json, {{err}}"), http.StatusBadRequest)
+			http.Error(wr, fmt.Sprintf("failed to read json : ", err), http.StatusBadRequest)
 		}
 		ok, msg, err := ma.MailDB.AddSubscriber(subscriber)
 		if err != nil {
@@ -69,7 +69,7 @@ func (ma *MailApp) SendMail() http.HandlerFunc {
 		if err != nil {
 			http.Error(wr, msg, http.StatusInternalServerError)
 		}
-
+		log.Println(msg)
 		log.Println("........ preparing to send mail to subscribers ........ ")
 		time.Sleep(time.Millisecond)
 		log.Println("........ Accessing the subscribers Database ........ ")
