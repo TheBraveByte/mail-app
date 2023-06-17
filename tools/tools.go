@@ -6,17 +6,17 @@ import (
 	"fmt"
 	"html/template"
 	"io"
-	_ "io/ioutil"
 	"log"
 	"net/http"
 	"path/filepath"
+	"strings"
 	"time"
-	_ "time"
 
+	"code.sajari.com/docconv"
 	"github.com/akinbyte/mailapp/model"
 )
 
-// JSONReader : is a resuable function to help read the information or details submitted.
+// JSONReader : is a reusable function to help read the information or details submitted.
 func JSONReader(wr http.ResponseWriter, rq *http.Request, subs model.Subscriber) (model.Subscriber, error) {
 	read := http.MaxBytesReader(wr, rq.Body, int64(1024*1024)*10)
 	defer func(io.ReadCloser) {
@@ -49,7 +49,7 @@ func JSONWriter(wr http.ResponseWriter, msg string, statusCode int) error {
 	return nil
 }
 
-// ReadForm handles the processing of multipart form data, extracting relevant fields, and reading the content of an uploaded documen
+// ReadForm handles the processing of multipart form data, extracting relevant fields, and reading the content of an uploaded document
 func ReadForm(wr http.ResponseWriter, rq *http.Request, mail model.MailUpload) (model.MailUpload, error) {
 	if err := rq.ParseMultipartForm(10 << 20); err != nil {
 		log.Fatal(err)
@@ -66,15 +66,15 @@ func ReadForm(wr http.ResponseWriter, rq *http.Request, mail model.MailUpload) (
 
 	if file[0].Filename != "" {
 		fileExtension := filepath.Ext(file[0].Filename)
-		switch fileExtension {
-		case ".doc", "docx", ".txt":
-			f, err := file[0].Open()
-			if err != nil {
-				return model.MailUpload{}, fmt.Errorf("unable to Open uploaded document")
-			}
-			defer f.Close()
 
+		f, err := file[0].Open()
+		if err != nil {
+			return model.MailUpload{}, fmt.Errorf("unable to Open uploaded document")
+		}
+		defer f.Close()
 
+	switch fileExtension	 {
+		case ".txt":
 			scanner := bufio.NewScanner(f)
 			for scanner.Scan() {
 				line := fmt.Sprintf("%s<br>", scanner.Text())
@@ -84,6 +84,21 @@ func ReadForm(wr http.ResponseWriter, rq *http.Request, mail model.MailUpload) (
 			if err := scanner.Err(); err != nil {
 				log.Fatal(err)
 			}
+		case ".docx", ".doc":
+			// process .docx / .doc uploaded files
+			res, _, err := docconv.ConvertDocx(f)
+			if err != nil {
+				log.Fatal(err)
+			}
+
+			lines := strings.Split(res, "\n")
+			var content string
+			// Add line breaks to each line
+			for _, line := range lines {
+				content += line + "<br>"
+			}
+			mail.DocxContent = content
+
 		default:
 			return model.MailUpload{}, fmt.Errorf("upload document not allow; try .txt .docx or .doc")
 		}
@@ -91,7 +106,7 @@ func ReadForm(wr http.ResponseWriter, rq *http.Request, mail model.MailUpload) (
 	return mail, nil
 }
 
-// HTMLRender function reads and parses an HTML template file, executes the parsed template with provided data, and writes the resulting HTML to the http.ResponseWriter. 
+// HTMLRender function reads and parses an HTML template file, executes the parsed template with provided data, and writes the resulting HTML to the http.ResponseWriter.
 func HTMLRender(wr http.ResponseWriter, rq *http.Request, dt any) error {
 	filePath := "./index.html"
 
