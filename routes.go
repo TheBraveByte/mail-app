@@ -16,6 +16,7 @@ func Routes(lg handlers.Logic) *chi.Mux {
 	mux.Post("/api/submit", lg.GetSubscriber())
 	mux.Post("/api/send", lg.SendMail())
 
+	
 	// mux := http.NewServeMux()
 	// mux.HandleFunc("/", lg.Home())
 	// mux.HandleFunc("/api/submit", lg.GetSubscriber())

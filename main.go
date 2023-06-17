@@ -2,8 +2,10 @@ package main
 
 import (
 	"context"
+	"fmt"
 	"log"
 	"net/http"
+	"os"
 
 	"github.com/akinbyte/mailapp/db"
 	"github.com/akinbyte/mailapp/email"
@@ -51,7 +53,7 @@ func main() {
 	handle := Routes(app)
 
 	srv := http.Server{
-		Addr:    ":8080",
+		Addr:    fmt.Sprintf(":%s", os.Getenv("PORT")),
 		Handler: handle,
 	}
 
