@@ -108,7 +108,7 @@ func ReadForm(wr http.ResponseWriter, rq *http.Request, mail model.MailUpload) (
 
 // HTMLRender function reads and parses an HTML template file, executes the parsed template with provided data, and writes the resulting HTML to the http.ResponseWriter.
 func HTMLRender(wr http.ResponseWriter, rq *http.Request, dt any) error {
-	filePath := "./index.html"
+	filePath := "./frontend/index.html"
 
 	tmp, err := template.ParseFiles(filePath)
 	if err != nil {
