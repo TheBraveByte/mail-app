@@ -31,6 +31,7 @@ func (ma *MailApp) Home() http.HandlerFunc {
 		err := tools.HTMLRender(wr, rq, nil)
 		if err != nil {
 			log.Println(err)
+			return
 		}
 	}
 }
@@ -39,13 +40,15 @@ func (ma *MailApp) Home() http.HandlerFunc {
 func (ma *MailApp) GetSubscriber() http.HandlerFunc {
 	return func(wr http.ResponseWriter, rq *http.Request) {
 		var subs model.Subscriber
-		subscriber, err := tools.JSONReader(wr, rq, subs)
+		subscriber, err := tools.ReadForm(rq, subs)
 		if err != nil {
-			http.Error(wr, fmt.Sprintf("failed to read json : ", err), http.StatusBadRequest)
+			http.Error(wr, fmt.Sprint("failed to read json : ", err), http.StatusBadRequest)
+			return
 		}
 		ok, msg, err := ma.MailDB.AddSubscriber(subscriber)
 		if err != nil {
 			http.Error(wr, msg, http.StatusInternalServerError)
+			return
 		}
 		switch ok {
 		case msg == "":
@@ -60,14 +63,16 @@ func (ma *MailApp) GetSubscriber() http.HandlerFunc {
 func (ma *MailApp) SendMail() http.HandlerFunc {
 	return func(wr http.ResponseWriter, rq *http.Request) {
 		var mailUpload model.MailUpload
-		upload, err := tools.ReadForm(wr, rq, mailUpload)
+		upload, err := tools.ReadMultiForm(wr, rq, mailUpload)
 		if err != nil {
 			http.Error(wr, err.Error(), http.StatusBadRequest)
+			return
 		}
 
 		msg, err := ma.MailDB.AddMail(upload)
 		if err != nil {
 			http.Error(wr, msg, http.StatusInternalServerError)
+			return
 		}
 		log.Println(msg)
 		log.Println("........ preparing to send mail to subscribers ........ ")
@@ -77,6 +82,7 @@ func (ma *MailApp) SendMail() http.HandlerFunc {
 		res, err := ma.MailDB.FindSubscribers()
 		if err != nil {
 			http.Error(wr, fmt.Sprintf("SendMail: failed query: %v", err), http.StatusInternalServerError)
+			return
 		}
 
 		for _, s := range res {
@@ -97,6 +103,7 @@ func (ma *MailApp) SendMail() http.HandlerFunc {
 		err = tools.JSONWriter(wr, fmt.Sprintf("Mail Sent %v subscribers", len(res)), http.StatusOK)
 		if err != nil {
 			http.Error(wr, err.Error(), http.StatusInternalServerError)
+			return
 		}
 	}
 }

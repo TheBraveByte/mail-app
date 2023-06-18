@@ -5,7 +5,6 @@ import (
 	"encoding/json"
 	"fmt"
 	"html/template"
-	"io"
 	"log"
 	"net/http"
 	"path/filepath"
@@ -16,20 +15,19 @@ import (
 	"github.com/akinbyte/mailapp/model"
 )
 
-// JSONReader : is a reusable function to help read the information or details submitted.
-func JSONReader(wr http.ResponseWriter, rq *http.Request, subs model.Subscriber) (model.Subscriber, error) {
-	read := http.MaxBytesReader(wr, rq.Body, int64(1024*1024)*10)
-	defer func(io.ReadCloser) {
-		err := read.Close()
-		if err != nil {
-			panic(err)
-		}
-	}(read)
-
-	err := json.NewDecoder(read).Decode(&subs)
-	if err != nil {
+// ReadForm : is a reusable function to help read the information or details submitted.
+func ReadForm(rq *http.Request, subs model.Subscriber) (model.Subscriber, error) {
+	if err := rq.ParseForm(); err != nil {
+		log.Println(err)
 		return model.Subscriber{}, err
 	}
+	subs = model.Subscriber{
+		FirstName: rq.Form.Get("first_name"),
+		LastName:  rq.Form.Get("last_name"),
+		Email:     rq.Form.Get("email"),
+		Interest:  rq.Form.Get("interest"),
+	}
+	
 	return subs, nil
 }
 
@@ -49,8 +47,8 @@ func JSONWriter(wr http.ResponseWriter, msg string, statusCode int) error {
 	return nil
 }
 
-// ReadForm handles the processing of multipart form data, extracting relevant fields, and reading the content of an uploaded document
-func ReadForm(wr http.ResponseWriter, rq *http.Request, mail model.MailUpload) (model.MailUpload, error) {
+// ReadMultiForm handles the processing of multipart form data, extracting relevant fields, and reading the content of an uploaded document
+func ReadMultiForm(wr http.ResponseWriter, rq *http.Request, mail model.MailUpload) (model.MailUpload, error) {
 	if err := rq.ParseMultipartForm(10 << 20); err != nil {
 		log.Fatal(err)
 	}
@@ -73,7 +71,7 @@ func ReadForm(wr http.ResponseWriter, rq *http.Request, mail model.MailUpload) (
 		}
 		defer f.Close()
 
-	switch fileExtension	 {
+		switch fileExtension {
 		case ".txt":
 			scanner := bufio.NewScanner(f)
 			for scanner.Scan() {
@@ -108,7 +106,7 @@ func ReadForm(wr http.ResponseWriter, rq *http.Request, mail model.MailUpload) (
 
 // HTMLRender function reads and parses an HTML template file, executes the parsed template with provided data, and writes the resulting HTML to the http.ResponseWriter.
 func HTMLRender(wr http.ResponseWriter, rq *http.Request, dt any) error {
-	filePath := "./frontend/index.html"
+	filePath := "./index.html"
 
 	tmp, err := template.ParseFiles(filePath)
 	if err != nil {
