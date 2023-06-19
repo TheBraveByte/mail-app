@@ -36,7 +36,7 @@ To avoid confusion, I'll explain the differences and similarities between concur
 >
 > - _Rob Pike_
 
-![concurrent vs parallelism Image](https://imgur.com/a/pVArEHJ)
+![concurrent vs parallelism Image](https://i.imgur.com/eIId6C3.png)
 
 Concurrency and parallelism often need clarification to be the same, even though they are not. However, they both involve the simultaneous execution of processes and are sometimes used interchangeably and based on similar principles.
 
@@ -173,7 +173,7 @@ fmt.Println("Received from buffered channel:", data1, data2)
 
 Here is the output of the code below:
 
-![channels](https://imgur.com/a/JkJqf8l)
+![channels](https://i.imgur.com/Lla3u9E.png)
 
 Go's **select** statement is similar to the `switch` statement. It is typically employed to execute tasks in the presence of channel data while concurrently reading from or writing to other goroutines. This feature enhances performance and minimises delays among goroutines during program execution.
 
@@ -279,7 +279,7 @@ time.Sleep(1 * time.Second)
 
 When you run the code above several times, the output you see should be similar to the image below:
 
-![channels](https://imgur.com/a/4plwGxd)
+![channels](https://i.imgur.com/eI2puXg.png)
 
 This basic explanation is sufficient for your needs in this tutorial. For a deeper understanding of concurrency, Goroutines, and their building blocks, you can refer to this [resource](link for the article on Concurrency in Go @Earthly).
 
@@ -287,7 +287,7 @@ This basic explanation is sufficient for your needs in this tutorial. For a deep
 
 Now that you have gained a basic understanding of concurrency and its practical implementation using Goroutines, it is essential to note that these concepts in Go are designed and built based on the theoretical model of [CSP](https://en.wikipedia.org/wiki/Communicating_sequential_processes).
 
-![CSP](https://imgur.com/a/gmnGXuj)
+![CSP](https://i.imgur.com/aZv1TX8.png)
 
 CSP is a framework for describing patterns and understanding systems involving complex message exchanges. It helps explain how different components of a concurrent system interact. **Go's** approach to concurrency prioritises the principles of CSP and focuses on safety, efficiency, and ease of programming, building Goroutines upon them.
 
@@ -356,7 +356,7 @@ go mod init github.com/akinbyte/mailapp
 
 After initialising the `go mod init` command, the project folder will contain `go.mod` file.
 
-![go-modules](https://imgur.com/a/YQyAp3z)
+![go-modules](https://i.imgur.com/X5qYNQv.png)
 
 The `go.mod` file holds module details like name and version. Learn more about Go modules [here](https://go.dev/doc/modules/managing-dependencies).
 
@@ -370,7 +370,7 @@ go get go.mongodb.org/mongo-driver/mongo
 
 Upon successful execution, you should observe a similar output in the terminal as shown below:
 
-![mongo-install](https://imgur.com/a/9vLp9ES)
+![mongo-install](https://i.imgur.com/DNkvNxJ.png)
 
 The following package you need to install is the [Gomail](https://github.com/go-gomail/gomail) package. The installation process for this package is similar to the previous one. To install it, use the following command:
 
@@ -380,7 +380,7 @@ go get gopkg.in/gomail.v2
 
 After executing this command, you should see a similar output in your terminal, as shown below:
 
-![go-mail-install](https://imgur.com/a/33ruKst)
+![go-mail-install](https://i.imgur.com/jqGQoYW.png)
 
 Use the same approach to install [chi](https://pkg.go.dev/github.com/go-chi/chi/v5) for routing. Use the command below:
 
@@ -388,7 +388,7 @@ Use the same approach to install [chi](https://pkg.go.dev/github.com/go-chi/chi/
 go get github.com/go-chi/chi/v5
 ```
 
-![go-chi-install](https://imgur.com/a/IRdFFLc)
+![go-chi-install](https://i.imgur.com/hp2a48a.png)
 
 Follow the same procedure to install [godotenv](https://github.com/joho/godotenv) and [docconv](https://pkg.go.dev/code.sajari.com/docconv) using the commands below one at a time, respectively.
 
@@ -398,8 +398,8 @@ go get github.com/joho/godotenv
 go get -u code.sajari.com/docconv
 ```
 
-![godotenv-install](https://imgur.com/InpfnYb)
-![docconv-install](https://imgur.com/tktdrHV)
+![godotenv-install](https://i.imgur.com/InpfnYb.png)
+![docconv-install](https://i.imgur.com/tktdrHV.png)
 
 After installing all the libraries and their dependencies, you will notice that your project folder automatically creates a `go.sum` file. This file stores dependency checksums and versions, vital for managing dependencies in Go.
 
@@ -415,30 +415,30 @@ When you create a Gmail account, by default, access by third parties is disabled
 It is essential to configure and set up your account correctly.
 
 i. Sign in to your Gmail account, go to the top right corner and click on your profile. Then, select "**Manage your Google Account**".
-![manage-gmail](https://imgur.com/a/j3wLkuS)
+![manage-gmail](https://i.imgur.com/DfKUr6N.png)
 
 ii. Once you've accessed your account page, you can modify settings and make configuration changes. Follow these steps:
 
 - On the left menu, click on the "Security" section.
-![account-page](https://imgur.com/a/JrP2s9a)
+![account-page](https://i.imgur.com/06J03Wi.png)
 
 - Scroll down to the bottom and click "**Less secure app**." You can find additional information about less secure apps if needed.
-![less-secure-app](.https://imgur.com/a/EUsd1gE)
-![less-secure-app-info](https://imgur.com/a/J92sG9p)
-![less-secure-app-info-1](https://imgur.com/a/CYUqCwi)
+![less-secure-app](https://i.imgur.com/whVgwM6.png)
+![less-secure-app-info](https://i.imgur.com/PLsMCSo.png)
+![less-secure-app-info-1](https://i.imgur.com/9oKJLAQ.png)
 - To enable access for third-party applications like this project, set up **2-Step Verification** in the **Security** section. Make sure to link your devices for verification and choose the appropriate prompts.
-![verify-code](https://imgur.com/a/Pnn8ZOK)
+![verify-code](https://i.imgur.com/2gfDBID.png)
 - Turn on 2-Step Verification by clicking on the corresponding option.
-![2-step-turn-on](https://imgur.com/a/iUQzcUv)
-![turn-on](https://imgur.com/a/TYOjIGn)
+![2-step-turn-on](https://i.imgur.com/Nuc7F3y.png)
+![turn-on](https://i.imgur.com/dOkw5MT.png)
 
 iii. Once you have enabled the **2-Step Verification**, proceed to add an **App Password**.
-![choose-create-app-password](https://imgur.com/a/EY1xbAr)
+![choose-create-app-password](https://i.imgur.com/3MP3q0U.png)
 
 - Choose an app name and device from the dropdown menu, or create a custom name as shown in the image below:
-![create-app-password](https://imgur.com/a/bVzeR0e)
+![create-app-password](https://i.imgur.com/sfIOfUz.png)
 - Click on the "Generate" button to create the **App password**.
-![generate-app-password](https://imgur.com/a/jlGsh6J)
+![generate-app-password](https://i.imgur.com/jqAzM8U.png)
 - Remember to write down or copy the generated App password for future use, as it will only be accessible once generated.
 
 Once you have generated an App password, you can enable API access from other applications. In the next section, you will learn about using environment variables in the application.
@@ -467,7 +467,7 @@ This section teaches you to build a solid and reliable server-side mail applicat
 
 The application structure you will be working with here relies on a diagrammatic representation below, illustrating the application's architecture.
 
-![mail-app-arch](https://imgur.com/a/pbC1EgP)
+![mail-app-arch](https://i.imgur.com/pXAUWGi.png)
 
 Soon, you'll grasp the application's structure implemented using Package Oriented Design. Let's begin.
 
@@ -583,18 +583,18 @@ Check this [**link**](https://www.mongodb.com/docs/atlas/getting-started/) for s
 Follow the steps below to set up your database and get the connection string:
 
 - Click on **Database** in the left menu and select **Browse Collection** to create a database for the application.
-![atlas-dashboard](https://imgur.com/a/hDrgyFN)
+![atlas-dashboard](https://i.imgur.com/m7pZDFJ.png)
 
 - Click **Create Database** to add a new database named **mail-app** and include two collections:
 **mails** (stores sent mail) and **subscribers** (stores registered subscribers).
-![create-db](https://imgur.com/a/JZWOShe)
+![create-db](https://i.imgur.com/rPVJCu7.png)
 
 - Next, click "Connect" to choose a connection method.
-![connect-method](https://imgur.com/a/uIK7T3Q)
+![connect-method](https://i.imgur.com/Tayy1Km.png)
 
 Select the required MongoDB Driver for **Go** and copy the connection string. Update it with your username and password.
 `mongodb+srv://<username>:<password>@cluster0.opv1wfb.mongodb.net/?retryWrites=true&w=majority`
-![connect-string](./image/connect-string.png)
+![connect-string](https://i.imgur.com/gUuJQBk.png)
 
 Update the .env file with the URI connection string:
 
@@ -1694,17 +1694,17 @@ As you have finished building the mail server API, it is time to test the applic
 To follow along, make sure you have Thunder Client extension or Postman installed and set up the API as described below:
 
 - Create an API collection named **MailAPP**, then add a new request as shown below
-![create-collection-request](../article/image/create-API-collection.png)
+![create-collection-request](https://i.imgur.com/Z3WSRX7.png)
 
 - Add a new request for the home page, which you will use to render the application interface later.
-![home-page-request](image/new-home-request.png)
+![home-page-request](https://i.imgur.com/g7NnLQg.png)
 
 - Add the HTTP **GET** request method and configure it with the correct URL.
-![home-request-config](image/home-request.png)
+![home-request-config](https://i.imgur.com/Z3LeWnd.png)
 
 - Create and configure new HTTP **POST** requests for subscribers to **subscribe** with their details and **send mail** content of the uploaded document with their URLs.
-![subscribe-request](image/subscriber-request.png)
-![send-mail](image/send-mail-request.png)
+![subscribe-request](https://i.imgur.com/Rr3VKfY.png)
+![send-mail](https://i.imgur.com/7cfPkSR.png)
 
 Now that you've made configurations for the API. Let's move on to build and run the application to start the local server.
 
@@ -1729,20 +1729,20 @@ go run main.go routes.go
 ### Test Run
 
 The Server is up and running and connected to the database. You can test to process each request created earlier one at a time.
-![start-server](image/start-server.png)
+![start-server](https://i.imgur.com/6Tclslv.png)
 
 To test each request, click the **send** button to initialise the process. Start by requesting for the subscriber to submit their details.
-![sub-details](image/post-details.png)
+![sub-details](https://i.imgur.com/Xlp8eaA.png)
 
 Having the same output above would be best, indicating that the request is processed successfully. Now Go ahead and try sending the mail to all the subscribers.
-![send-email](image/send-sub-mail.png)
+![send-email](https://i.imgur.com/gArrNEQ.png)
 
 The email sent to all registered subscribers without problems or mistakes indicates success.
 
 To confirm that the registered subscriber received the sent message, I will check the email account's inbox used below.
-![inbox-message](image/inbox-11.png)
-![inbox-content](image/inbox-2.png)
-![inbox-header](image/inbox-3.png)
+![inbox-message](https://i.imgur.com/sB0g9zW.png)
+![inbox-content](https://i.imgur.com/Lw1l1hm.png)
+![inbox-header](https://i.imgur.com/J7dsaRY.png)
 
 # Building User and Subscriber Interface for Mail Sending
 
