@@ -1,3 +1,51 @@
+# Introduction
+
+# Overview of Concurrent Mail Server
+
+- Concurrency and its importance
+- Concurrency and Parallelism
+- Goroutine and its basic building block
+- Communicating Sequential Processes(CSP): The Model of Concurrency
+- Explanation using the Universe: Planet Earth and Human
+- Benefits of using Goroutines and Gmail Integration
+
+# Setting Up the Environment
+
+- Prerequisite Knowledge
+- Installing necessary tools
+- Creating a Gmail account and enabling API access
+- Configuring credentials and environment variables
+
+# Building the Mail Server API
+
+- Designing the API architecture
+- Understanding the Application Model
+  - Code Snippet for the model Package
+- Integrating MongoDB Database
+  - Setting Up the Database Connection
+  - Default Collection Function
+  - Database Queries
+  - Interface Implementation
+- Creating API endpoints and handling requests
+  - Implementing Functions in the Tools Package
+  - Creating Handler Method to Process HTTP
+  - Implementing an Interface for Handler Methods
+  - Creating Routes Endpoints(URL)
+
+
+- Integrating Gmail API for sending and receiving emails
+- Implementing Goroutines and Channels for Concurrency
+- Intialising the Application Server in the Main function
+
+# Testing the application API
+
+- Starting the API Server
+- Test Run
+
+# Building Subscriber and User Interface for Mail Sending
+
+- Creating form for mail details and upload document
+- Creating form for subscriber details
 
 # Introduction
 
