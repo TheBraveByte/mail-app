@@ -1,3 +1,52 @@
+Article Pitch
+Title: Building a Concurrent Mail Server API with Goroutines and Gmail Integration
+Introduction
+Overview of Concurrent Mail Server
+Concurrency and its importance
+Concurrency and Parallelism
+ Goroutine and its basic building block
+Communicating Sequential Processes(CSP): The Model of Concurrency
+Explanation using the Universe: Planet Earth and Human
+Benefits of using Goroutines and Gmail Integration
+
+Setting Up the Environment
+Prerequisite Knowledge
+Installing necessary tools
+Creating a Gmail account and enabling API access
+Configuring credentials and environment variables
+
+Building the Mail Server API
+Designing the API architecture
+Understanding the Application Model
+Code Snippet for the model Package
+Integrating MongoDB Database
+Setting Up the Database Connection
+Default Collection Function
+Database Queries
+Interface Implementation
+Creating API endpoints and handling requests
+Implementing Functions in the Tools Package
+Creating Handler Method to Process HTTP
+Implementing an Interface for Handler Methods
+Creating Routes Endpoints(URL)
+
+Integrating Gmail API for sending and receiving emails
+Implementing Goroutines and Channels for Concurrency
+Initialising the Application Server in the Main function
+
+Testing the application API
+Starting the API Server
+Test Run
+
+Building Subscriber and User Interface for Mail Sending
+Creating a form for mail details and uploading a document
+Creating a form for subscriber details
+
+Conclusion
+Summary of the article
+Next steps and reflections
+ 
+
 # Introduction
 
 It is fascinating to take full advantage of the multicore processor for executing and implementing concurrent processes or programs, and it's interesting doing so using the simplicity of Go and its abstractions.
@@ -35,7 +84,7 @@ To avoid confusion, I'll explain the differences and similarities between concur
 >
 > - _Rob Pike_
 
-![concurrent vs parallelism Image](https://i.imgur.com/pVArEHJ.jpg)
+![concurrent vs parallelism Image](https://imgur.com/a/pVArEHJ)
 
 Concurrency and parallelism often need clarification to be the same, even though they are not. However, they both involve the simultaneous execution of processes and are sometimes used interchangeably and based on similar principles.
 
@@ -670,7 +719,9 @@ In the `db.go` file, the `OpenConnect` function keeps the database connection op
 
 ```go
 func OpenConnect() *mongo.Client {
- count = 0
+ uri := os.Getenv("URI")
+ count := 0
+ log.Println("....... Setting up Connection to MongoDB .......")
  for{}
 }
 ```
@@ -678,7 +729,7 @@ func OpenConnect() *mongo.Client {
 The infinite loop invokes `SetConnect` with the environment variable key `URI` using the `os` package. If there's a connection error, it logs the message for database disconnection and increments `count`. Otherwise, it confirms the database connection and returns the client.
 
 ```go
-client, err := SetConnect(os.Getenv("URI"))
+client, err := SetConnect(uri)
 if err != nil {
  log.Println("Mail App Database not Connected")
  count++
@@ -696,7 +747,7 @@ if count >= 5 {
  return nil
 }
 
-log.Println("Wait:.... Mail App Database Retrying to Connect")
+log.Println("Wait:.... Mail App Database Retrying to Connect ....")
 time.Sleep(10 * time.Second)
 continue
 ```
@@ -893,26 +944,48 @@ The following explains the functionalities of the functions within the package:
 
 ### Implementing Functions in the Tools Package
 
-The `JSONReader` function below ensures that the subscriber's request body is read safely and efficiently using `http.MaxBytesReader` to prevent excessive requests. If it reaches the limit, it closes the connection using `http.ResponseWriter`.
-
-An anonymous function executed in LIFO order using `defer` processes the request body to close up. The `json` package decodes the body into `model.Subscribers`. If the decoding fails, the function returns an empty value and an error message. If successful, it returns the decoded value.
+First, import all the packages and built-ins needed here.
 
 ```go
-// JSONReader: This is a reusable function to help read the information or details submitted.
-func JSONReader(wr http.ResponseWriter, rq *http.Request, subs model.Subscriber) (model.Subscriber, error) {
-read := http.MaxBytesReader(wr, rq.Body, int64(1024*1024)*10)
+package tools
 
-defer func(io.ReadCloser) {
- err := read.Close()
- if err != nil {
-  panic(err)
- }
-}(read)
+import (
+ "bufio"
+ "encoding/json"
+ "fmt"
+ "html/template"
+ "log"
+ "net/http"
+ "path/filepath"
+ "strings"
+ "time"
 
-err := json.NewDecoder(read).Decode(&subs)
-if err != nil {
- return model.Subscriber{}, err
+ "code.sajari.com/docconv"
+ "github.com/akinbyte/mailapp/model"
+)
+```
+
+---
+
+The `ReadForm` function below ensures that the subscriber's request body is read safely and efficiently using `http.ParseForm()` to get the request body parameters. If any error comes up while parsing the form, the function prints out the error and returns an empty struct value with the error.
+
+The subs of struct type of `model.Subscribers` fields are populated using the `rq.Form.Get("key")` to get the value associated with the given keys.
+
+If successful, The function returns the filled `subs` struct and a `nil` error message.
+
+```go
+// ReadForm: This is a reusable function to help read the information or details submitted.
+func ReadForm(rq *http.Request, subs model.Subscriber) (model.Subscriber, error) {
+ if err := rq.ParseForm; err != nil {
+ log.Println(err)
+ return model.Subscriber{}, err }
+ subs = model.Subscriber{
+  FirstName: rq.Form.Get("first_name"),
+  LastName:  rq.Form.Get("last_name"),
+  Email:     rq.Form.Get("email"),
+  Interest:  rq.Form.Get("interest"),
  }
+ 
  return subs, nil
 }
 ```
@@ -943,10 +1016,10 @@ return nil
 
 ---
 
-The `ReadForm` function reads and processes a multipart form submitted via an HTTP request. It accepts three parameters: `wr http.ResponseWriter`, `rq *http.Request`, and `mail model.MailUpload`. The function returns a `model.MailUpload` object and an error, if any, for further processing.
+The `ReadMultiForm` function reads and processes a multipart form submitted via an HTTP request. It accepts three parameters: `wr http.ResponseWriter`, `rq *http.Request`, and `mail model.MailUpload`. The function returns a `model.MailUpload` object and an error, if any, for further processing.
 
 ```go
-func ReadForm(wr http.ResponseWriter, rq *http.Request, mail model.MailUpload) (model.MailUpload, error) {}
+func ReadMultiForm(wr http.ResponseWriter, rq *http.Request, mail model.MailUpload) (model.MailUpload, error) {}
 ```
 
 ---
@@ -1159,6 +1232,7 @@ func (ma *MailApp) Home() http.HandlerFunc {
   err := tools.HTMLRender(wr, rq, nil)
   if err != nil {
    log.Println(err)
+   return
   }
  }
 }
@@ -1177,24 +1251,26 @@ func (ma *MailApp) GetSubscriber() http.HandlerFunc {
 ---
 
 Declare a variable named `subs` of type `model.Subscriber`.
-Call the `tools.JSONReader` function from the _tools_ package to read the HTTP request by passing `wr`, `rq`, and `subs` as arguments. Respond to an error with `http.Error`, including the specified status code and error message.
+Call the `tools.ReadForm` function from the _tools_ package to read the HTTP request by passing `wr`, `rq`, and `subs` as arguments. Respond to an error with `http.Error`, including the specified status code and error message.
 
 ```go
 var subs model.Subscriber
-subscriber, err := tools.JSONReader(wr, rq, subs)
+subscriber, err := tools.ReadForm(rq, subs)
 if err != nil {
  http.Error(wr, fmt.Sprintf("failed to read json : ",err), http.StatusBadRequest)
+ return
 }
 ```
 
 ---
 
-The `AddSubscriber` method injects dependency through the `db.DataStore` interface. It receives the result of the `JSONReader` function as an argument. The `AddSubscriber` function returns three outputs: `ok` (to verify the successful addition of the subscriber), "msg" (a message to include in the HTTP response), and `err` (to indicate any errors encountered).
+The `AddSubscriber` method injects dependency through the `db.DataStore` interface. It receives the result of the `ReadForm` function as an argument. The `AddSubscriber` function returns three outputs: `ok` (to verify the successful addition of the subscriber), "msg" (a message to include in the HTTP response), and `err` (to indicate any errors encountered).
 
 ```go
 ok, msg, err := ma.MailDB.AddSubscriber(subscriber)
 if err != nil {
  http.Error(wr, msg, http.StatusInternalServerError)
+ return
 }
 ```
 
@@ -1223,24 +1299,26 @@ func (ma *MailApp) SendMail() http.HandlerFunc {
 
 ---
 
-To retrieve input details and the uploaded document containing the mail to send, the `tools.ReadForm` function accepts a `mailUpload` variable of type `model.MailUpload` as an argument, along with `wr` and `rq`. `http.Error` to obtain the corresponding HTTP response message and `http.StatusBadRequest` (400) status code.
+To retrieve input details and the uploaded document containing the mail to send, the `tools.ReadMultiForm` function accepts a `mailUpload` variable of type `model.MailUpload` as an argument, along with `wr` and `rq`. `http.Error` to obtain the corresponding HTTP response message and `http.StatusBadRequest` (400) status code.
 
 ```go
 var mailUpload model.MailUpload
-upload, err := tools.ReadForm(wr, rq, mailUpload)
+upload, err := tools.ReadMultiForm(wr, rq, mailUpload)
 if err != nil {
  http.Error(wr, err.Error(), http.StatusBadRequest)
+ return
 }
 ```
 
 ---
 
-The `tools.ReadForm` function returns a value of type `model.MailUpload` and is then passed as an argument to the `AddMail` method, which is part of the `db.DataStore` interface. The purpose is to store the mail intended for subscribers in the database. Following this, an HTTP response with a status code of `http.StatusInternalServerError` (500), accompanied by an appropriate message.
+The `tools.ReadMultiForm` function returns a value of type `model.MailUpload` and is then passed as an argument to the `AddMail` method, which is part of the `db.DataStore` interface. The purpose is to store the mail intended for subscribers in the database. Following this, an HTTP response with a status code of `http.StatusInternalServerError` (500), accompanied by an appropriate message.
 
 ```go
 msg, err := ma.MailDB.AddMail(upload)
 if err != nil {
 http.Error(wr, msg, http.StatusInternalServerError)
+return
 }
 ```
 
@@ -1263,6 +1341,7 @@ The next process calls the `FindSubscribers` method, which returns all registere
 res, err := ma.MailDB.FindSubscribers()
 if err != nil {
  http.Error(wr, fmt.Sprintf("failed query: %v", err), http.StatusInternalServerError)
+ return
 }
 ```
 
@@ -1298,6 +1377,7 @@ After successfully sending the mail to the subscriber through an efficient perfo
 err = tools.JSONWriter(wr, fmt.Sprintf("Mail Sent %v subscribers", len(res)), http.StatusOK)
 if err != nil {
  http.Error(wr, err.Error(), http.StatusInternalServerError)
+ return
 }
 ```
 
@@ -1325,9 +1405,9 @@ type Logic interface {
 
 ---
 
-Next, let's create endpoints.
+Next, let's create endpoints for these handlers.
 
-### Creating Endpoints(URL)
+### Creating Routes Endpoints(URL)
 
 You can now create endpoints(URL) which typically correspond to a specific function or method in the backend code that handles the request and returns the appropriate response.
 
@@ -1353,12 +1433,30 @@ func Routes(lg handlers.Logic) *chi.Mux {
 
 Then, the HTTP method `GET` execute the `lg.Home` HandlerFunc attached with the URL `/` route pattern to render the homepage.
 
-Also, there are the `POST` methods with the route pattern of `/api/submit` and `/api/send` to carry out the request for the Subscriber to register and for the user to send mail to their subscribers, respectively. `mux` Pointer to `chi.Mux` is returned to be passed as an argument to the `http.Server`.
+Also, there are the `POST` methods with the route pattern of `/api/submit` and `/api/send` to carry out the request for the Subscriber to register and for the user to send mail to their subscribers, respectively.
 
 ```go
 mux.Get("/", lg.Home())
 mux.Post("/api/submit", lg.GetSubscriber())
 mux.Post("/api/send", lg.SendMail())
+```
+
+---
+
+The server should serve and handle the static files (CSS and images) required by the application's client side. 
+
+To achieve that, `http.Dir` allows access to the **static** directory path `./static` at the root level. This directory is passed as an argument to the `http.FileServer` function, which returns an `http.Handler` assigned to the `fileServer` variable. This `fileServer` serves HTTP requests with the contents of the directory.
+
+```go
+fileServer := http.FileServer(http.Dir("./static"))
+```
+
+---
+
+The `Handle` method is invoked to execute the `fileServer` `http.Handler` by stripping off the prefix `/static` of the pattern `/static/*` with the `http.StripPrefix` function. `mux` Pointer to `chi.Mux` is returned to be passed as an argument to the `http.Server`.
+
+```go
+mux.Handle("/static/*", http.StripPrefix("/static", fileServer))
 return mux
 ```
 
@@ -1366,7 +1464,7 @@ return mux
 
 The application router to execute all the HTTP requests is now correctly done. It would help if you looked into the next section that shows how the mail server is setup up to receive data from a channel.
 
-## Integrating Gmail API for sending and receiving emails
+## Integrating Gmail API for Sending and Receiving Emails
 
 Using Goroutines to achieve concurrency in sending mail to various people all at once to achieve utmost performance and efficiency is the target goal of this application.
 
@@ -1636,3 +1734,132 @@ log.Fatalf("Shutting Down the Mail App Server ")
 
 If the server shuts down using `CRTL + C`, the `main` function completes execution and the program exits.
 The implementation and building of a concurrent mail server API has ended and is now ready to be tested.
+
+## Testing the application API
+
+As you have finished building the mail server API, it is time to test the application. To test run the application, you will need a REST Client API tool such as Postman, Insomnia or Thunder Client Extension in Vscode. I will be using the **ThunderClient** extension.
+
+To follow along, make sure you have Thunder Client extension or Postman installed and set up the API as described below:
+
+- Create an API collection named **MailAPP**, then add a new request as shown below
+![create-collection-request](../article/image/create-API-collection.png)
+
+- Add a new request for the home page, which you will use to render the application interface later.
+![home-page-request](image/new-home-request.png)
+
+- Add the HTTP **GET** request method and configure it with the correct URL.
+![home-request-config](image/home-request.png)
+
+- Create and configure new HTTP **POST** requests for subscribers to **subscribe** with their details and **send mail** content of the uploaded document with their URLs.
+![subscribe-request](image/subscriber-request.png)
+![send-mail](image/send-mail-request.png)
+
+Now that you've made configurations for the API. Let's move on to build and run the application to start the local server.
+
+### Starting the API Server
+
+To start the API server, Open your terminal or command prompt and ensure you are in the **mail app** project directory.
+
+Execute this command below to build the application and start up the server.
+
+For Linux or MacOS users (using the wildcard syntax):
+
+```go
+go run *.go
+```
+
+For Windows users:
+
+```go
+go run main.go routes.go
+```
+
+### Test Run
+
+The Server is up and running and connected to the database. You can test to process each request created earlier one at a time.
+![start-server](image/start-server.png)
+
+To test each request, click the **send** button to initialise the process. Start by requesting for the subscriber to submit their details.
+![sub-details](image/post-details.png)
+
+Having the same output above would be best, indicating that the request is processed successfully. Now Go ahead and try sending the mail to all the subscribers.
+![send-email](image/send-sub-mail.png)
+
+The email sent to all registered subscribers without problems or mistakes indicates success.
+
+To confirm that the registered subscriber received the sent message, I will check the email account's inbox used below.
+![inbox-message](image/inbox-11.png)
+![inbox-content](image/inbox-2.png)
+![inbox-header](image/inbox-3.png)
+
+# Building User and Subscriber Interface for Mail Sending
+
+Now that it is confirmed that the API is working as expected. You can now build an interface using HTML & CSS and integrate it with the Mail Server API.
+
+## Creating a form for mail details and uploading a document
+
+A brief explanation of the important parts of the interface structure of the application's client side.
+
+---
+
+It's described below how to create form inputs for the email title and its document, setting the form method to `post` and the encoding method to `multipart/form-data` to handle and process the uploaded document of the mail content by the  API and the `**submit**` button to be clicked to submit the form to the URL `/api/send` which triggers an `alert` message.
+
+```html
+<!-- Form for a user to upload the mail document to sent -->
+      <form action="/api/send" method="post" enctype="multipart/form-data">
+        <label for="">Title</label>
+        <div class="user-input">
+          <input type="text" name="docx_name" id="name" />
+        </div>
+        <label for="">Document</label>
+        <div class="user-input">
+          <input type="file" name="docx" id="" />
+        </div>
+        <button type="submit" value="" onclick="sendMailAlert()">Send</button>
+      </form>
+```
+
+---
+
+## Creating a form for subscriber details
+
+Here is a form created for the subscriber to submit their details in the input fields named `first_name`, `last_name`, `email`, and `interest` and have it stored in the database by the  API. Also, the `**submit**` button triggers an 'alert' message when clicked to submit the form to this endpoint `/api/submit`.
+
+```html
+form action="/api/submit" method="post">
+          <label for="">First Name</label>
+          <div class="user-input">
+            <input type="text" name="first_name" id="first_name" />
+          </div>
+          <label for="">Last Name</label>
+          <div class="user-input">
+            <input type="text" name="last_name" id="last_name" />
+          </div>
+          <label for="">Email</label>
+          <div class="user-input">
+            <input type="email" name="email" id="email" />
+          </div>
+          <label for="">Interest</label>
+          <div class="user-input">
+            <input type="text" name="interest" id="interest" />
+          </div>
+          <button type="submit" onclick="submitAlert()">Subscribe</button>
+        </form>
+```
+
+---
+
+check the full [HTML](https://github.com/akinbyte/mail-app/blob/main/index.html) design template and the [CSS](https://github.com/akinbyte/mail-app/blob/main/static/style.css) file.
+
+# Conclusion
+
+## Summary of this Article
+
+The article comprehensively outlines the implementation of a concurrent mail server, covering topics such as concurrency models, API development, database integration, and Gmail API integration. It also discusses the setup process, testing, and ways to improve the user interface. This article is a practical guide for individuals looking to build a robust mail server with concurrency features.
+
+## Next steps and reflections
+
+The next steps involve enhancing functionality by adding features like email filtering, attachment handling, and advanced search capabilities, improving the user experience through intuitive forms and real-time validation, optimizing performance with load balancing and caching, and ensuring security measures.
+
+Here is the GitHub [link](https://github.com/akinbyte/mail-app) to the repo.
+
