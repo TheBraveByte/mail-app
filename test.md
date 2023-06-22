@@ -131,7 +131,6 @@ unbufferedChan := make(chan string)
 
 In the main program, a variable is declared as a **Buffered** channel with a specific capacity, whereas the **Unbuffered** channels stated below do not have a set capacity.
 
----
 
 ```go
 
