@@ -347,7 +347,7 @@ Concurrency proves beneficial in software programs and applications. Like humans
 
 You have covered the fundamentals of concurrency and goroutines sufficiently. It's time to prepare ourselves for the real challenges ahead.
 
-## Benefits of using Goroutines and Gmail Integration
+## Benefits of Using Goroutines and Gmail Integration
 
 Now that you are familiar with goroutines, you must understand the advantages and benefits of using them in conjunction with Gmail Integration for sending newsletter emails to users, which you will learn in this tutorial.
 
