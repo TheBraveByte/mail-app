@@ -47,7 +47,7 @@
 - Creating form for mail details and upload document
 - Creating form for subscriber details
 
-# Introduction
+# Building a Concurrent Mail Server API with Goroutines and Gmail Integration
 
 It is fascinating to take full advantage of the multicore processor for executing and implementing concurrent processes or programs, and it's interesting doing so using the simplicity of Go and its abstractions.
 
@@ -111,7 +111,6 @@ One way to improve Goroutines' performance is to enhance them. It is crucial to 
 
 Refer to the code section below for insights on creating and using channels to communicate within your program.
 
----
 
 ```go
 package main
@@ -154,7 +153,6 @@ time.Sleep(time.Second)
 
 Two values, 10 and 20, are sent to a **buffered** channel using the arrow syntax(`<-`). In the main program, an **unbuffered** channel utilises a goroutine to assign received value to a `data` variable and perform its process. A short delay introduces using the `time` package to ensure proper execution of the goroutine before the main function finishes.
 
----
 
 ```go
 
@@ -176,7 +174,6 @@ A `string` data is sent to the unbuffered channel, while the data sent to the bu
 
 Here's the complete code snippet below:
 
----
 
 ```go
 package main
@@ -227,7 +224,6 @@ Go's **select** statement is similar to the `switch` statement. It is typically 
 
 A simple code explains how the `select` statement works.
 
----
 
 ```go
 package main
@@ -245,7 +241,7 @@ stringChan := make(chan string)
 }
 ```
 
-We create two-channel variables, one with the type "int" and the other with the type "string", both unbuffered.
+You create two-channel variables, one with the type "int" and the other with the type "string", both unbuffered.
 
 ---
 
@@ -264,7 +260,7 @@ stringChan <- "Hello, Gophers."
 
 Goroutines are created and utilised to send data through their respective channels, allowing for simultaneous data transmission of different types (such as `int` and `string`).
 
----
+
 
 ```go
 // Receive from the channels in a separate goroutine.
@@ -285,7 +281,6 @@ An initialised goroutine receives data sent through the channels. It executes th
 
 Below is the complete code snippet for the select statement.
 
----
 
 ```go
 package main
@@ -349,9 +344,9 @@ Consider planet Earth as an example. It houses sophisticated systems with indepe
 
 Humans demonstrate concurrency. You have unique thoughts, feelings, and actions. Multitasking is natural for you, whether talking, reading this article, critical thinking or listening to music. Your brain adeptly manages these processes without becoming overwhelmed.
 
-Concurrency proves valuable in software programs and applications. Like humans, the software can benefit from executing multiple tasks simultaneously. This approach ensures a substantial increase in productivity, allows for the speedy completion of functions and promotes a well-rounded approach towards accomplishing your objectives.
+Concurrency proves beneficial in software programs and applications. Like humans, the software can benefit from executing multiple tasks simultaneously. This approach ensures a substantial increase in productivity, allows for the speedy completion of functions and promotes a well-rounded approach towards accomplishing your objectives.
 
-We have covered the fundamentals of concurrency and goroutines sufficiently. It's time to prepare ourselves for the real challenges ahead.
+You have covered the fundamentals of concurrency and goroutines sufficiently. It's time to prepare ourselves for the real challenges ahead.
 
 ## Benefits of using Goroutines and Gmail Integration
 
@@ -384,13 +379,13 @@ Now that you have set up your work environment, I will list all the necessary pa
 
 - Install the [go-mongodb-driver](https://www.mongodb.com/docs/drivers/go/current/), a tool designed to interact with a MongoDB cloud database. This project offers a range of tools to store user details and simplify the storage of emails intended for users.
 
-- Install [gomail](https://github.com/go-gomail/gomail), a package that enables sending emails using an SMTP server.
+- Install [gomail](https://github.com/go-gomail/gomail): a package that sends emails using an SMTP server to subscribed users for account notifications and communication.
 
-- Install [chi](https://pkg.go.dev/github.com/go-chi/chi/v5): a package for building HTTP services and parses a request path to execute handler.
+- Install [chi](https://pkg.go.dev/github.com/go-chi/chi/v5): a package that builds HTTP services, initialises middleware, handles request paths, and serves static files.
 
-- Install [godotenv](https://github.com/joho/godotenv): package to load environment variables from a .env file.
+- Install [godotenv](https://github.com/joho/godotenv): a package that loads environment variables from a `.env` file to access key variable values easily.
 
-- Install [docconv](https://pkg.go.dev/code.sajari.com/docconv): package to convert **.docx** and **.doc** file to plain text for easy.
+- Install [docconv](https://pkg.go.dev/code.sajari.com/docconv): package to converts uploaded `.docx` and `.doc` files to plain text for easier processing.
 
 But before you install any of these packages, follow the instructions below:
 
@@ -509,7 +504,7 @@ As you progress, you can continue modifying the .env file by adding new key-valu
 
 # Building the Mail Server API
 
-This section teaches you to build a solid and reliable server-side mail application. But before we proceed, in the next section, I'll explain the application's structure for better comprehension.
+This section teaches you to build a solid and reliable server-side mail application. But before you proceed, in the next section, I'll explain the application's structure for better comprehension.
 
 ## Designing the API architecture
 
@@ -556,7 +551,6 @@ type Subscriber struct {
 }
 ```
 
----
 
 The `MailUpload struct` stores the document uploaded by the user along with their corresponding types and `struct` tags.
 
@@ -646,7 +640,6 @@ Select the required MongoDB Driver for **Go** and copy the connection string. Up
 
 Update the .env file with the URI connection string:
 
----
 
 ```env
 APP_PASSWORD=iqcepxuzsdumzslx
@@ -1112,7 +1105,7 @@ The code reads all the lines and checks for scanning errors using `scanner.Err()
 
 ---
 
-While for that of `case ".docx", ".doc"`, the function utilises a `docconv.ConvertDocx` function to convert an MS Word docx or doc file to text for easy readability. It reads the file line by line, formats each line with an HTML line break (`<br>`), appends it to the `content` variable, then assigns its value to `mail.DocxContent`.
+While for that of `case ".docx", ".doc"`, the function utilises a `docconv.ConvertDocx` function to convert an MS Word docx or doc file to text for easy readability. It reads the file line by line, formats each line with an HTML line break (`<br>`), appends it to the `content` variable, and then assigns its value to `mail.DocxContent`.
 
 ```go
 // process .docx or .doc uploaded files
@@ -1170,7 +1163,7 @@ return nil
 }
 ```
 
-Now that we've discussed the functionality implemented in the _tools_ package let's create the methods for handling HTTP requests.
+Now that you've understood the functionality implemented in the _tools_ package let's create the methods for handling HTTP requests.
 
 ### Creating Handler Method to Process HTTP
 
@@ -1709,7 +1702,7 @@ app := handlers.NewMailApp(client, MailChan)
 
 ---
 
-The `Routes` function from the `handlers` package receives the `app` variable as an argument. It returns a value of type `*chi.Mux`, which we assign to the `handle` variable. The 'handle' variable initialises the application server on the port address `8080` .
+The `Routes` function from the `handlers` package receives the `app` variable as an argument. It returns a value of type `*chi.Mux`, which you assign to the `handle` variable. The 'handle' variable initialises the application server on the port address `8080` .
 
 ```go
 handle := Routes(app)
