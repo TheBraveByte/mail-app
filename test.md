@@ -1,5 +1,54 @@
 # Introduction
 
+# Overview of Concurrent Mail Server
+
+- Concurrency and its importance
+- Concurrency and Parallelism
+- Goroutine and its basic building block
+- Communicating Sequential Processes(CSP): The Model of Concurrency
+- Explanation using the Universe: Planet Earth and Human
+- Benefits of using Goroutines and Gmail Integration
+
+# Setting Up the Environment
+
+- Prerequisite Knowledge
+- Installing necessary tools
+- Creating a Gmail account and enabling API access
+- Configuring credentials and environment variables
+
+# Building the Mail Server API
+
+- Designing the API architecture
+- Understanding the Application Model
+  - Code Snippet for the model Package
+- Integrating MongoDB Database
+  - Setting Up the Database Connection
+  - Default Collection Function
+  - Database Queries
+  - Interface Implementation
+- Creating API endpoints and handling requests
+  - Implementing Functions in the Tools Package
+  - Creating Handler Method to Process HTTP
+  - Implementing an Interface for Handler Methods
+  - Creating Routes Endpoints(URL)
+
+
+- Integrating Gmail API for sending and receiving emails
+- Implementing Goroutines and Channels for Concurrency
+- Intialising the Application Server in the Main function
+
+# Testing the application API
+
+- Starting the API Server
+- Test Run
+
+# Building Subscriber and User Interface for Mail Sending
+
+- Creating form for mail details and upload document
+- Creating form for subscriber details
+
+# Building a Concurrent Mail Server API with Goroutines and Gmail Integration
+
 It is fascinating to take full advantage of the multicore processor for executing and implementing concurrent processes or programs, and it's interesting doing so using the simplicity of Go and its abstractions.
 
 In this tutorial, you will learn how to implement a practical idea using concurrency and integrate it using Go functionality and its basic building blocks. So let's dive in at the right angle.
@@ -35,7 +84,7 @@ To avoid confusion, I'll explain the differences and similarities between concur
 >
 > - _Rob Pike_
 
-![concurrent vs parallelism Image](https://i.imgur.com/pVArEHJ.jpg)
+![concurrent vs parallelism Image](https://i.imgur.com/eIId6C3.png)
 
 Concurrency and parallelism often need clarification to be the same, even though they are not. However, they both involve the simultaneous execution of processes and are sometimes used interchangeably and based on similar principles.
 
@@ -62,7 +111,6 @@ One way to improve Goroutines' performance is to enhance them. It is crucial to 
 
 Refer to the code section below for insights on creating and using channels to communicate within your program.
 
----
 
 ```go
 package main
@@ -83,7 +131,6 @@ unbufferedChan := make(chan string)
 
 In the main program, a variable is declared as a **Buffered** channel with a specific capacity, whereas the **Unbuffered** channels stated below do not have a set capacity.
 
----
 
 ```go
 
@@ -105,7 +152,6 @@ time.Sleep(time.Second)
 
 Two values, 10 and 20, are sent to a **buffered** channel using the arrow syntax(`<-`). In the main program, an **unbuffered** channel utilises a goroutine to assign received value to a `data` variable and perform its process. A short delay introduces using the `time` package to ensure proper execution of the goroutine before the main function finishes.
 
----
 
 ```go
 
@@ -127,7 +173,6 @@ A `string` data is sent to the unbuffered channel, while the data sent to the bu
 
 Here's the complete code snippet below:
 
----
 
 ```go
 package main
@@ -172,13 +217,12 @@ fmt.Println("Received from buffered channel:", data1, data2)
 
 Here is the output of the code below:
 
-![channels](https://imgur.com/a/JkJqf8l)
+![channels](https://i.imgur.com/Lla3u9E.png)
 
 Go's **select** statement is similar to the `switch` statement. It is typically employed to execute tasks in the presence of channel data while concurrently reading from or writing to other goroutines. This feature enhances performance and minimises delays among goroutines during program execution.
 
 A simple code explains how the `select` statement works.
 
----
 
 ```go
 package main
@@ -196,7 +240,7 @@ stringChan := make(chan string)
 }
 ```
 
-We create two-channel variables, one with the type "int" and the other with the type "string", both unbuffered.
+You create two-channel variables, one with the type "int" and the other with the type "string", both unbuffered.
 
 ---
 
@@ -215,7 +259,7 @@ stringChan <- "Hello, Gophers."
 
 Goroutines are created and utilised to send data through their respective channels, allowing for simultaneous data transmission of different types (such as `int` and `string`).
 
----
+
 
 ```go
 // Receive from the channels in a separate goroutine.
@@ -236,7 +280,6 @@ An initialised goroutine receives data sent through the channels. It executes th
 
 Below is the complete code snippet for the select statement.
 
----
 
 ```go
 package main
@@ -278,7 +321,7 @@ time.Sleep(1 * time.Second)
 
 When you run the code above several times, the output you see should be similar to the image below:
 
-![channels](https://imgur.com/a/4plwGxd)
+![channels](https://i.imgur.com/eI2puXg.png)
 
 This basic explanation is sufficient for your needs in this tutorial. For a deeper understanding of concurrency, Goroutines, and their building blocks, you can refer to this [resource](link for the article on Concurrency in Go @Earthly).
 
@@ -286,7 +329,7 @@ This basic explanation is sufficient for your needs in this tutorial. For a deep
 
 Now that you have gained a basic understanding of concurrency and its practical implementation using Goroutines, it is essential to note that these concepts in Go are designed and built based on the theoretical model of [CSP](https://en.wikipedia.org/wiki/Communicating_sequential_processes).
 
-![CSP](https://imgur.com/a/gmnGXuj)
+![CSP](https://i.imgur.com/aZv1TX8.png)
 
 CSP is a framework for describing patterns and understanding systems involving complex message exchanges. It helps explain how different components of a concurrent system interact. **Go's** approach to concurrency prioritises the principles of CSP and focuses on safety, efficiency, and ease of programming, building Goroutines upon them.
 
@@ -300,11 +343,11 @@ Consider planet Earth as an example. It houses sophisticated systems with indepe
 
 Humans demonstrate concurrency. You have unique thoughts, feelings, and actions. Multitasking is natural for you, whether talking, reading this article, critical thinking or listening to music. Your brain adeptly manages these processes without becoming overwhelmed.
 
-Concurrency proves valuable in software programs and applications. Like humans, the software can benefit from executing multiple tasks simultaneously. This approach ensures a substantial increase in productivity, allows for the speedy completion of functions and promotes a well-rounded approach towards accomplishing your objectives.
+Concurrency proves beneficial in software programs and applications. Like humans, the software can benefit from executing multiple tasks simultaneously. This approach ensures a substantial increase in productivity, allows for the speedy completion of functions and promotes a well-rounded approach towards accomplishing your objectives.
 
-We have covered the fundamentals of concurrency and goroutines sufficiently. It's time to prepare ourselves for the real challenges ahead.
+You have covered the fundamentals of concurrency and goroutines sufficiently. It's time to prepare ourselves for the real challenges ahead.
 
-## Benefits of using Goroutines and Gmail Integration
+## Benefits of Using Goroutines and Gmail Integration
 
 Now that you are familiar with goroutines, you must understand the advantages and benefits of using them in conjunction with Gmail Integration for sending newsletter emails to users, which you will learn in this tutorial.
 
@@ -335,13 +378,13 @@ Now that you have set up your work environment, I will list all the necessary pa
 
 - Install the [go-mongodb-driver](https://www.mongodb.com/docs/drivers/go/current/), a tool designed to interact with a MongoDB cloud database. This project offers a range of tools to store user details and simplify the storage of emails intended for users.
 
-- Install [gomail](https://github.com/go-gomail/gomail), a package that enables sending emails using an SMTP server.
+- Install [gomail](https://github.com/go-gomail/gomail): a package that sends emails using an SMTP server to subscribed users for account notifications and communication.
 
-- Install [chi](https://pkg.go.dev/github.com/go-chi/chi/v5): a package for building HTTP services and parses a request path to execute handler.
+- Install [chi](https://pkg.go.dev/github.com/go-chi/chi/v5): a package that builds HTTP services, initialises middleware, handles request paths, and serves static files.
 
-- Install [godotenv](https://github.com/joho/godotenv): package to load environment variables from a .env file.
+- Install [godotenv](https://github.com/joho/godotenv): a package that loads environment variables from a `.env` file to access key variable values easily.
 
-- Install [docconv](https://pkg.go.dev/code.sajari.com/docconv): package to convert **.docx** and **.doc** file to plain text for easy.
+- Install [docconv](https://pkg.go.dev/code.sajari.com/docconv): package to converts uploaded `.docx` and `.doc` files to plain text for easier processing.
 
 But before you install any of these packages, follow the instructions below:
 
@@ -355,7 +398,7 @@ go mod init github.com/akinbyte/mailapp
 
 After initialising the `go mod init` command, the project folder will contain `go.mod` file.
 
-![go-modules](https://imgur.com/a/YQyAp3z)
+![go-modules](https://i.imgur.com/X5qYNQv.png)
 
 The `go.mod` file holds module details like name and version. Learn more about Go modules [here](https://go.dev/doc/modules/managing-dependencies).
 
@@ -369,7 +412,7 @@ go get go.mongodb.org/mongo-driver/mongo
 
 Upon successful execution, you should observe a similar output in the terminal as shown below:
 
-![mongo-install](https://imgur.com/a/9vLp9ES)
+![mongo-install](https://i.imgur.com/DNkvNxJ.png)
 
 The following package you need to install is the [Gomail](https://github.com/go-gomail/gomail) package. The installation process for this package is similar to the previous one. To install it, use the following command:
 
@@ -379,7 +422,7 @@ go get gopkg.in/gomail.v2
 
 After executing this command, you should see a similar output in your terminal, as shown below:
 
-![go-mail-install](https://imgur.com/a/33ruKst)
+![go-mail-install](https://i.imgur.com/jqGQoYW.png)
 
 Use the same approach to install [chi](https://pkg.go.dev/github.com/go-chi/chi/v5) for routing. Use the command below:
 
@@ -387,7 +430,7 @@ Use the same approach to install [chi](https://pkg.go.dev/github.com/go-chi/chi/
 go get github.com/go-chi/chi/v5
 ```
 
-![go-chi-install](https://imgur.com/a/IRdFFLc)
+![go-chi-install](https://i.imgur.com/hp2a48a.png)
 
 Follow the same procedure to install [godotenv](https://github.com/joho/godotenv) and [docconv](https://pkg.go.dev/code.sajari.com/docconv) using the commands below one at a time, respectively.
 
@@ -397,8 +440,8 @@ go get github.com/joho/godotenv
 go get -u code.sajari.com/docconv
 ```
 
-![godotenv-install](https://imgur.com/InpfnYb)
-![docconv-install](https://imgur.com/tktdrHV)
+![godotenv-install](https://i.imgur.com/InpfnYb.png)
+![docconv-install](https://i.imgur.com/tktdrHV.png)
 
 After installing all the libraries and their dependencies, you will notice that your project folder automatically creates a `go.sum` file. This file stores dependency checksums and versions, vital for managing dependencies in Go.
 
@@ -414,30 +457,30 @@ When you create a Gmail account, by default, access by third parties is disabled
 It is essential to configure and set up your account correctly.
 
 i. Sign in to your Gmail account, go to the top right corner and click on your profile. Then, select "**Manage your Google Account**".
-![manage-gmail](https://imgur.com/a/j3wLkuS)
+![manage-gmail](https://i.imgur.com/DfKUr6N.png)
 
 ii. Once you've accessed your account page, you can modify settings and make configuration changes. Follow these steps:
 
 - On the left menu, click on the "Security" section.
-![account-page](https://imgur.com/a/JrP2s9a)
+![account-page](https://i.imgur.com/06J03Wi.png)
 
 - Scroll down to the bottom and click "**Less secure app**." You can find additional information about less secure apps if needed.
-![less-secure-app](.https://imgur.com/a/EUsd1gE)
-![less-secure-app-info](https://imgur.com/a/J92sG9p)
-![less-secure-app-info-1](https://imgur.com/a/CYUqCwi)
+![less-secure-app](https://i.imgur.com/whVgwM6.png)
+![less-secure-app-info](https://i.imgur.com/PLsMCSo.png)
+![less-secure-app-info-1](https://i.imgur.com/9oKJLAQ.png)
 - To enable access for third-party applications like this project, set up **2-Step Verification** in the **Security** section. Make sure to link your devices for verification and choose the appropriate prompts.
-![verify-code](https://imgur.com/a/Pnn8ZOK)
+![verify-code](https://i.imgur.com/2gfDBID.png)
 - Turn on 2-Step Verification by clicking on the corresponding option.
-![2-step-turn-on](https://imgur.com/a/iUQzcUv)
-![turn-on](https://imgur.com/a/TYOjIGn)
+![2-step-turn-on](https://i.imgur.com/Nuc7F3y.png)
+![turn-on](https://i.imgur.com/dOkw5MT.png)
 
 iii. Once you have enabled the **2-Step Verification**, proceed to add an **App Password**.
-![choose-create-app-password](https://imgur.com/a/EY1xbAr)
+![choose-create-app-password](https://i.imgur.com/3MP3q0U.png)
 
 - Choose an app name and device from the dropdown menu, or create a custom name as shown in the image below:
-![create-app-password](https://imgur.com/a/bVzeR0e)
+![create-app-password](https://i.imgur.com/sfIOfUz.png)
 - Click on the "Generate" button to create the **App password**.
-![generate-app-password](https://imgur.com/a/jlGsh6J)
+![generate-app-password](https://i.imgur.com/jqAzM8U.png)
 - Remember to write down or copy the generated App password for future use, as it will only be accessible once generated.
 
 Once you have generated an App password, you can enable API access from other applications. In the next section, you will learn about using environment variables in the application.
@@ -460,13 +503,13 @@ As you progress, you can continue modifying the .env file by adding new key-valu
 
 # Building the Mail Server API
 
-This section teaches you to build a solid and reliable server-side mail application. But before we proceed, in the next section, I'll explain the application's structure for better comprehension.
+This section teaches you to build a solid and reliable server-side mail application. But before you proceed, in the next section, I'll explain the application's structure for better comprehension.
 
 ## Designing the API architecture
 
 The application structure you will be working with here relies on a diagrammatic representation below, illustrating the application's architecture.
 
-![mail-app-arch](https://imgur.com/a/pbC1EgP)
+![mail-app-arch](https://i.imgur.com/pXAUWGi.png)
 
 Soon, you'll grasp the application's structure implemented using Package Oriented Design. Let's begin.
 
@@ -507,7 +550,6 @@ type Subscriber struct {
 }
 ```
 
----
 
 The `MailUpload struct` stores the document uploaded by the user along with their corresponding types and `struct` tags.
 
@@ -582,22 +624,21 @@ Check this [**link**](https://www.mongodb.com/docs/atlas/getting-started/) for s
 Follow the steps below to set up your database and get the connection string:
 
 - Click on **Database** in the left menu and select **Browse Collection** to create a database for the application.
-![atlas-dashboard](https://imgur.com/a/hDrgyFN)
+![atlas-dashboard](https://i.imgur.com/m7pZDFJ.png)
 
 - Click **Create Database** to add a new database named **mail-app** and include two collections:
 **mails** (stores sent mail) and **subscribers** (stores registered subscribers).
-![create-db](https://imgur.com/a/JZWOShe)
+![create-db](https://i.imgur.com/rPVJCu7.png)
 
 - Next, click "Connect" to choose a connection method.
-![connect-method](https://imgur.com/a/uIK7T3Q)
+![connect-method](https://i.imgur.com/Tayy1Km.png)
 
 Select the required MongoDB Driver for **Go** and copy the connection string. Update it with your username and password.
 `mongodb+srv://<username>:<password>@cluster0.opv1wfb.mongodb.net/?retryWrites=true&w=majority`
-![connect-string](./image/connect-string.png)
+![connect-string](https://i.imgur.com/gUuJQBk.png)
 
 Update the .env file with the URI connection string:
 
----
 
 ```env
 APP_PASSWORD=iqcepxuzsdumzslx
@@ -670,7 +711,9 @@ In the `db.go` file, the `OpenConnect` function keeps the database connection op
 
 ```go
 func OpenConnect() *mongo.Client {
- count = 0
+ uri := os.Getenv("URI")
+ count := 0
+ log.Println("....... Setting up Connection to MongoDB .......")
  for{}
 }
 ```
@@ -678,7 +721,7 @@ func OpenConnect() *mongo.Client {
 The infinite loop invokes `SetConnect` with the environment variable key `URI` using the `os` package. If there's a connection error, it logs the message for database disconnection and increments `count`. Otherwise, it confirms the database connection and returns the client.
 
 ```go
-client, err := SetConnect(os.Getenv("URI"))
+client, err := SetConnect(uri)
 if err != nil {
  log.Println("Mail App Database not Connected")
  count++
@@ -696,7 +739,7 @@ if count >= 5 {
  return nil
 }
 
-log.Println("Wait:.... Mail App Database Retrying to Connect")
+log.Println("Wait:.... Mail App Database Retrying to Connect ....")
 time.Sleep(10 * time.Second)
 continue
 ```
@@ -893,26 +936,48 @@ The following explains the functionalities of the functions within the package:
 
 ### Implementing Functions in the Tools Package
 
-The `JSONReader` function below ensures that the subscriber's request body is read safely and efficiently using `http.MaxBytesReader` to prevent excessive requests. If it reaches the limit, it closes the connection using `http.ResponseWriter`.
-
-An anonymous function executed in LIFO order using `defer` processes the request body to close up. The `json` package decodes the body into `model.Subscribers`. If the decoding fails, the function returns an empty value and an error message. If successful, it returns the decoded value.
+First, import all the packages and built-ins needed here.
 
 ```go
-// JSONReader: This is a reusable function to help read the information or details submitted.
-func JSONReader(wr http.ResponseWriter, rq *http.Request, subs model.Subscriber) (model.Subscriber, error) {
-read := http.MaxBytesReader(wr, rq.Body, int64(1024*1024)*10)
+package tools
 
-defer func(io.ReadCloser) {
- err := read.Close()
- if err != nil {
-  panic(err)
- }
-}(read)
+import (
+ "bufio"
+ "encoding/json"
+ "fmt"
+ "html/template"
+ "log"
+ "net/http"
+ "path/filepath"
+ "strings"
+ "time"
 
-err := json.NewDecoder(read).Decode(&subs)
-if err != nil {
- return model.Subscriber{}, err
+ "code.sajari.com/docconv"
+ "github.com/akinbyte/mailapp/model"
+)
+```
+
+---
+
+The `ReadForm` function below ensures that the subscriber's request body is read safely and efficiently using `http.ParseForm()` to get the request body parameters. If any error comes up while parsing the form, the function prints out the error and returns an empty struct value with the error.
+
+The subs of struct type of `model.Subscribers` fields are populated using the `rq.Form.Get("key")` to get the value associated with the given keys.
+
+If successful, The function returns the filled `subs` struct and a `nil` error message.
+
+```go
+// ReadForm: This is a reusable function to help read the information or details submitted.
+func ReadForm(rq *http.Request, subs model.Subscriber) (model.Subscriber, error) {
+ if err := rq.ParseForm; err != nil {
+ log.Println(err)
+ return model.Subscriber{}, err }
+ subs = model.Subscriber{
+  FirstName: rq.Form.Get("first_name"),
+  LastName:  rq.Form.Get("last_name"),
+  Email:     rq.Form.Get("email"),
+  Interest:  rq.Form.Get("interest"),
  }
+ 
  return subs, nil
 }
 ```
@@ -943,10 +1008,10 @@ return nil
 
 ---
 
-The `ReadForm` function reads and processes a multipart form submitted via an HTTP request. It accepts three parameters: `wr http.ResponseWriter`, `rq *http.Request`, and `mail model.MailUpload`. The function returns a `model.MailUpload` object and an error, if any, for further processing.
+The `ReadMultiForm` function reads and processes a multipart form submitted via an HTTP request. It accepts three parameters: `wr http.ResponseWriter`, `rq *http.Request`, and `mail model.MailUpload`. The function returns a `model.MailUpload` object and an error, if any, for further processing.
 
 ```go
-func ReadForm(wr http.ResponseWriter, rq *http.Request, mail model.MailUpload) (model.MailUpload, error) {}
+func ReadMultiForm(wr http.ResponseWriter, rq *http.Request, mail model.MailUpload) (model.MailUpload, error) {}
 ```
 
 ---
@@ -1039,7 +1104,7 @@ The code reads all the lines and checks for scanning errors using `scanner.Err()
 
 ---
 
-While for that of `case ".docx", ".doc"`, the function utilises a `docconv.ConvertDocx` function to convert an MS Word docx or doc file to text for easy readability. It reads the file line by line, formats each line with an HTML line break (`<br>`), appends it to the `content` variable, then assigns its value to `mail.DocxContent`.
+While for that of `case ".docx", ".doc"`, the function utilises a `docconv.ConvertDocx` function to convert an MS Word docx or doc file to text for easy readability. It reads the file line by line, formats each line with an HTML line break (`<br>`), appends it to the `content` variable, and then assigns its value to `mail.DocxContent`.
 
 ```go
 // process .docx or .doc uploaded files
@@ -1097,7 +1162,7 @@ return nil
 }
 ```
 
-Now that we've discussed the functionality implemented in the _tools_ package let's create the methods for handling HTTP requests.
+Now that you've understood the functionality implemented in the _tools_ package let's create the methods for handling HTTP requests.
 
 ### Creating Handler Method to Process HTTP
 
@@ -1159,6 +1224,7 @@ func (ma *MailApp) Home() http.HandlerFunc {
   err := tools.HTMLRender(wr, rq, nil)
   if err != nil {
    log.Println(err)
+   return
   }
  }
 }
@@ -1177,24 +1243,26 @@ func (ma *MailApp) GetSubscriber() http.HandlerFunc {
 ---
 
 Declare a variable named `subs` of type `model.Subscriber`.
-Call the `tools.JSONReader` function from the _tools_ package to read the HTTP request by passing `wr`, `rq`, and `subs` as arguments. Respond to an error with `http.Error`, including the specified status code and error message.
+Call the `tools.ReadForm` function from the _tools_ package to read the HTTP request by passing `wr`, `rq`, and `subs` as arguments. Respond to an error with `http.Error`, including the specified status code and error message.
 
 ```go
 var subs model.Subscriber
-subscriber, err := tools.JSONReader(wr, rq, subs)
+subscriber, err := tools.ReadForm(rq, subs)
 if err != nil {
  http.Error(wr, fmt.Sprintf("failed to read json : ",err), http.StatusBadRequest)
+ return
 }
 ```
 
 ---
 
-The `AddSubscriber` method injects dependency through the `db.DataStore` interface. It receives the result of the `JSONReader` function as an argument. The `AddSubscriber` function returns three outputs: `ok` (to verify the successful addition of the subscriber), "msg" (a message to include in the HTTP response), and `err` (to indicate any errors encountered).
+The `AddSubscriber` method injects dependency through the `db.DataStore` interface. It receives the result of the `ReadForm` function as an argument. The `AddSubscriber` function returns three outputs: `ok` (to verify the successful addition of the subscriber), "msg" (a message to include in the HTTP response), and `err` (to indicate any errors encountered).
 
 ```go
 ok, msg, err := ma.MailDB.AddSubscriber(subscriber)
 if err != nil {
  http.Error(wr, msg, http.StatusInternalServerError)
+ return
 }
 ```
 
@@ -1223,24 +1291,26 @@ func (ma *MailApp) SendMail() http.HandlerFunc {
 
 ---
 
-To retrieve input details and the uploaded document containing the mail to send, the `tools.ReadForm` function accepts a `mailUpload` variable of type `model.MailUpload` as an argument, along with `wr` and `rq`. `http.Error` to obtain the corresponding HTTP response message and `http.StatusBadRequest` (400) status code.
+To retrieve input details and the uploaded document containing the mail to send, the `tools.ReadMultiForm` function accepts a `mailUpload` variable of type `model.MailUpload` as an argument, along with `wr` and `rq`. `http.Error` to obtain the corresponding HTTP response message and `http.StatusBadRequest` (400) status code.
 
 ```go
 var mailUpload model.MailUpload
-upload, err := tools.ReadForm(wr, rq, mailUpload)
+upload, err := tools.ReadMultiForm(wr, rq, mailUpload)
 if err != nil {
  http.Error(wr, err.Error(), http.StatusBadRequest)
+ return
 }
 ```
 
 ---
 
-The `tools.ReadForm` function returns a value of type `model.MailUpload` and is then passed as an argument to the `AddMail` method, which is part of the `db.DataStore` interface. The purpose is to store the mail intended for subscribers in the database. Following this, an HTTP response with a status code of `http.StatusInternalServerError` (500), accompanied by an appropriate message.
+The `tools.ReadMultiForm` function returns a value of type `model.MailUpload` and is then passed as an argument to the `AddMail` method, which is part of the `db.DataStore` interface. The purpose is to store the mail intended for subscribers in the database. Following this, an HTTP response with a status code of `http.StatusInternalServerError` (500), accompanied by an appropriate message.
 
 ```go
 msg, err := ma.MailDB.AddMail(upload)
 if err != nil {
 http.Error(wr, msg, http.StatusInternalServerError)
+return
 }
 ```
 
@@ -1263,6 +1333,7 @@ The next process calls the `FindSubscribers` method, which returns all registere
 res, err := ma.MailDB.FindSubscribers()
 if err != nil {
  http.Error(wr, fmt.Sprintf("failed query: %v", err), http.StatusInternalServerError)
+ return
 }
 ```
 
@@ -1298,6 +1369,7 @@ After successfully sending the mail to the subscriber through an efficient perfo
 err = tools.JSONWriter(wr, fmt.Sprintf("Mail Sent %v subscribers", len(res)), http.StatusOK)
 if err != nil {
  http.Error(wr, err.Error(), http.StatusInternalServerError)
+ return
 }
 ```
 
@@ -1325,9 +1397,9 @@ type Logic interface {
 
 ---
 
-Next, let's create endpoints.
+Next, let's create endpoints for these handlers.
 
-### Creating Endpoints(URL)
+### Creating Routes Endpoints(URL)
 
 You can now create endpoints(URL) which typically correspond to a specific function or method in the backend code that handles the request and returns the appropriate response.
 
@@ -1353,12 +1425,30 @@ func Routes(lg handlers.Logic) *chi.Mux {
 
 Then, the HTTP method `GET` execute the `lg.Home` HandlerFunc attached with the URL `/` route pattern to render the homepage.
 
-Also, there are the `POST` methods with the route pattern of `/api/submit` and `/api/send` to carry out the request for the Subscriber to register and for the user to send mail to their subscribers, respectively. `mux` Pointer to `chi.Mux` is returned to be passed as an argument to the `http.Server`.
+Also, there are the `POST` methods with the route pattern of `/api/submit` and `/api/send` to carry out the request for the Subscriber to register and for the user to send mail to their subscribers, respectively.
 
 ```go
 mux.Get("/", lg.Home())
 mux.Post("/api/submit", lg.GetSubscriber())
 mux.Post("/api/send", lg.SendMail())
+```
+
+---
+
+The server should serve and handle the static files (CSS and images) required by the application's client side. 
+
+To achieve that, `http.Dir` allows access to the **static** directory path `./static` at the root level. This directory is passed as an argument to the `http.FileServer` function, which returns an `http.Handler` assigned to the `fileServer` variable. This `fileServer` serves HTTP requests with the contents of the directory.
+
+```go
+fileServer := http.FileServer(http.Dir("./static"))
+```
+
+---
+
+The `Handle` method is invoked to execute the `fileServer` `http.Handler` by stripping off the prefix `/static` of the pattern `/static/*` with the `http.StripPrefix` function. `mux` Pointer to `chi.Mux` is returned to be passed as an argument to the `http.Server`.
+
+```go
+mux.Handle("/static/*", http.StripPrefix("/static", fileServer))
 return mux
 ```
 
@@ -1366,7 +1456,7 @@ return mux
 
 The application router to execute all the HTTP requests is now correctly done. It would help if you looked into the next section that shows how the mail server is setup up to receive data from a channel.
 
-## Integrating Gmail API for sending and receiving emails
+## Integrating Gmail API for Sending and Receiving Emails
 
 Using Goroutines to achieve concurrency in sending mail to various people all at once to achieve utmost performance and efficiency is the target goal of this application.
 
@@ -1611,7 +1701,7 @@ app := handlers.NewMailApp(client, MailChan)
 
 ---
 
-The `Routes` function from the `handlers` package receives the `app` variable as an argument. It returns a value of type `*chi.Mux`, which we assign to the `handle` variable. The 'handle' variable initialises the application server on the port address `8080` .
+The `Routes` function from the `handlers` package receives the `app` variable as an argument. It returns a value of type `*chi.Mux`, which you assign to the `handle` variable. The 'handle' variable initialises the application server on the port address `8080` .
 
 ```go
 handle := Routes(app)
@@ -1636,3 +1726,132 @@ log.Fatalf("Shutting Down the Mail App Server ")
 
 If the server shuts down using `CRTL + C`, the `main` function completes execution and the program exits.
 The implementation and building of a concurrent mail server API has ended and is now ready to be tested.
+
+## Testing the application API
+
+As you have finished building the mail server API, it is time to test the application. To test run the application, you will need a REST Client API tool such as Postman, Insomnia or Thunder Client Extension in Vscode. I will be using the **ThunderClient** extension.
+
+To follow along, make sure you have Thunder Client extension or Postman installed and set up the API as described below:
+
+- Create an API collection named **MailAPP**, then add a new request as shown below
+![create-collection-request](https://i.imgur.com/Z3WSRX7.png)
+
+- Add a new request for the home page, which you will use to render the application interface later.
+![home-page-request](https://i.imgur.com/g7NnLQg.png)
+
+- Add the HTTP **GET** request method and configure it with the correct URL.
+![home-request-config](https://i.imgur.com/Z3LeWnd.png)
+
+- Create and configure new HTTP **POST** requests for subscribers to **subscribe** with their details and **send mail** content of the uploaded document with their URLs.
+![subscribe-request](https://i.imgur.com/Rr3VKfY.png)
+![send-mail](https://i.imgur.com/7cfPkSR.png)
+
+Now that you've made configurations for the API. Let's move on to build and run the application to start the local server.
+
+### Starting the API Server
+
+To start the API server, Open your terminal or command prompt and ensure you are in the **mail app** project directory.
+
+Execute this command below to build the application and start up the server.
+
+For Linux or MacOS users (using the wildcard syntax):
+
+```go
+go run *.go
+```
+
+For Windows users:
+
+```go
+go run main.go routes.go
+```
+
+### Test Run
+
+The Server is up and running and connected to the database. You can test to process each request created earlier one at a time.
+![start-server](https://i.imgur.com/6Tclslv.png)
+
+To test each request, click the **send** button to initialise the process. Start by requesting for the subscriber to submit their details.
+![sub-details](https://i.imgur.com/Xlp8eaA.png)
+
+Having the same output above would be best, indicating that the request is processed successfully. Now Go ahead and try sending the mail to all the subscribers.
+![send-email](https://i.imgur.com/gArrNEQ.png)
+
+The email sent to all registered subscribers without problems or mistakes indicates success.
+
+To confirm that the registered subscriber received the sent message, I will check the email account's inbox used below.
+![inbox-message](https://i.imgur.com/sB0g9zW.png)
+![inbox-content](https://i.imgur.com/Lw1l1hm.png)
+![inbox-header](https://i.imgur.com/J7dsaRY.png)
+
+# Building User and Subscriber Interface for Mail Sending
+
+Now that it is confirmed that the API is working as expected. You can now build an interface using HTML & CSS and integrate it with the Mail Server API.
+
+## Creating a form for mail details and uploading a document
+
+A brief explanation of the important parts of the interface structure of the application's client side.
+
+---
+
+It's described below how to create form inputs for the email title and its document, setting the form method to `post` and the encoding method to `multipart/form-data` to handle and process the uploaded document of the mail content by the  API and the `**submit**` button to be clicked to submit the form to the URL `/api/send` which triggers an `alert` message.
+
+```html
+<!-- Form for a user to upload the mail document to sent -->
+      <form action="/api/send" method="post" enctype="multipart/form-data">
+        <label for="">Title</label>
+        <div class="user-input">
+          <input type="text" name="docx_name" id="name" />
+        </div>
+        <label for="">Document</label>
+        <div class="user-input">
+          <input type="file" name="docx" id="" />
+        </div>
+        <button type="submit" value="" onclick="sendMailAlert()">Send</button>
+      </form>
+```
+
+---
+
+## Creating a form for subscriber details
+
+Here is a form created for the subscriber to submit their details in the input fields named `first_name`, `last_name`, `email`, and `interest` and have it stored in the database by the  API. Also, the `**submit**` button triggers an 'alert' message when clicked to submit the form to this endpoint `/api/submit`.
+
+```html
+form action="/api/submit" method="post">
+          <label for="">First Name</label>
+          <div class="user-input">
+            <input type="text" name="first_name" id="first_name" />
+          </div>
+          <label for="">Last Name</label>
+          <div class="user-input">
+            <input type="text" name="last_name" id="last_name" />
+          </div>
+          <label for="">Email</label>
+          <div class="user-input">
+            <input type="email" name="email" id="email" />
+          </div>
+          <label for="">Interest</label>
+          <div class="user-input">
+            <input type="text" name="interest" id="interest" />
+          </div>
+          <button type="submit" onclick="submitAlert()">Subscribe</button>
+        </form>
+```
+
+---
+
+check the full [HTML](https://github.com/akinbyte/mail-app/blob/main/index.html) design template and the [CSS](https://github.com/akinbyte/mail-app/blob/main/static/style.css) file.
+
+# Conclusion
+
+## Summary of this Article
+
+The article comprehensively outlines the implementation of a concurrent mail server, covering topics such as concurrency models, API development, database integration, and Gmail API integration. It also discusses the setup process, testing, and ways to improve the user interface. This article is a practical guide for individuals looking to build a robust mail server with concurrency features.
+
+## Next steps and reflections
+
+The next steps involve enhancing functionality by adding features like email filtering, attachment handling, and advanced search capabilities, improving the user experience through intuitive forms and real-time validation, optimizing performance with load balancing and caching, and ensuring security measures.
+
+Here is the GitHub [link](https://github.com/akinbyte/mail-app) to the repo.
+
